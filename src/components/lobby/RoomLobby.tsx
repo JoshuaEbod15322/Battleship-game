@@ -25,74 +25,75 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
   return (
     <motion.div
       id="room-lobby-panel"
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className="w-full max-w-lg mx-auto p-6 sm:p-8 rounded-3xl bg-slate-900/95 border border-cyan-500/30 shadow-2xl backdrop-blur-md font-mono text-slate-100"
+      exit={{ opacity: 0, scale: 0.97 }}
+      className="wr-panel w-full max-w-lg mx-auto p-6 sm:p-8 text-[#e9dfc4] relative"
     >
-      <div className="text-center mb-6">
-        <div className="text-[10px] uppercase tracking-widest text-cyan-400 font-bold px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/50 inline-block mb-2">
-          COMBAT LOBBY • ROOM {room.roomCode}
-        </div>
-        <h2 className="text-xl sm:text-2xl font-bold tracking-wider text-slate-100 uppercase">
-          FLEET COMMANDERS ASSEMBLED
+      <div className="absolute -top-3 left-6 wr-plate px-3 py-0.5 text-[10px] font-bold tracking-[0.3em] uppercase">
+        Muster Roll // {room.roomCode}
+      </div>
+
+      <div className="text-center mb-6 mt-2">
+        <h2 className="wr-head text-xl sm:text-2xl tracking-wider text-[#efe3c2] uppercase">
+          Officers Assembled
         </h2>
-        <p className="text-xs text-slate-400 mt-1">
+        <p className="text-xs text-[#a8956c] mt-1">
           {bothPresent
-            ? "Both flagships linked. Proceeding to fleet positioning."
-            : "Awaiting challenger link on tactical frequency..."}
+            ? "Both flagships wired to the plot table. Lay your fleets."
+            : "Holding the frequency open for the second officer..."}
         </p>
       </div>
 
       {/* Versus Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative mb-6">
         {/* PLAYER 1 */}
-        <div className="p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/40 relative overflow-hidden">
-          <div className="text-[10px] text-cyan-400 uppercase tracking-widest mb-1 font-bold">
-            PLAYER 1 (HOST)
+        <div className="p-4 bg-[#0d0b06] border border-[#6f5d21] relative">
+          <div className="text-[10px] text-[#c9a227] uppercase tracking-[0.25em] mb-1 font-bold">
+            Officer One (Host)
           </div>
-          <div className="text-base font-bold text-slate-100 truncate">
+          <div className="text-base font-bold text-[#efe3c2] truncate uppercase tracking-wider">
             {p1
               ? `${p1.name}${localPlayer.id === p1.id ? " (You)" : ""}`
-              : "Waiting for Host..."}
+              : "Post vacant..."}
           </div>
-          <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>Connected</span>
+          <div className="mt-3 flex items-center gap-1.5 text-xs text-[#7da05c] tracking-widest uppercase">
+            <span className="w-2 h-2 bg-[#7da05c] animate-ping" />
+            <span>At post</span>
           </div>
         </div>
 
         {/* VS Badge */}
-        <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-slate-900 border border-cyan-500/50 items-center justify-center text-xs font-extrabold text-cyan-300 shadow-md">
-          VS
+        <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-10 h-10 rotate-45 bg-[#14110a] border border-[#c9a227] items-center justify-center shadow-md">
+          <span className="-rotate-45 wr-head text-xs text-[#e8c84a]">VS</span>
         </div>
 
         {/* PLAYER 2 */}
         <div
-          className={`p-4 rounded-2xl border relative overflow-hidden ${
+          className={`p-4 border relative ${
             p2 && opponentConnected
-              ? "bg-slate-950/80 border-cyan-500/40"
-              : "bg-slate-950/40 border-slate-800/80"
+              ? "bg-[#0d0b06] border-[#6f5d21]"
+              : "bg-[#0d0b06]/60 border-[#3a3423]"
           }`}
         >
-          <div className="text-[10px] text-cyan-400 uppercase tracking-widest mb-1 font-bold">
-            PLAYER 2 (CHALLENGER)
+          <div className="text-[10px] text-[#c9a227] uppercase tracking-[0.25em] mb-1 font-bold">
+            Officer Two (Rival)
           </div>
-          <div className="text-base font-bold text-slate-100 truncate">
+          <div className="text-base font-bold text-[#efe3c2] truncate uppercase tracking-wider">
             {p2
               ? `${p2.name}${localPlayer.id === p2.id ? " (You)" : ""}`
-              : "Waiting for Opponent..."}
+              : "Post vacant..."}
           </div>
-          <div className="mt-3 flex items-center gap-1.5 text-xs">
+          <div className="mt-3 flex items-center gap-1.5 text-xs tracking-widest uppercase">
             {p2 && opponentConnected ? (
-              <span className="text-emerald-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span>Connected</span>
+              <span className="text-[#7da05c] flex items-center gap-1.5">
+                <span className="w-2 h-2 bg-[#7da05c] animate-ping" />
+                <span>At post</span>
               </span>
             ) : (
-              <span className="text-amber-400 flex items-center gap-1.5">
-                <Wifi className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                <span>Awaiting Signal</span>
+              <span className="text-[#c9a227] flex items-center gap-1.5">
+                <Wifi className="w-3.5 h-3.5 animate-pulse" />
+                <span>Awaiting wireless</span>
               </span>
             )}
           </div>
@@ -108,16 +109,16 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
             sound.playButton();
             onContinueToPlacement();
           }}
-          className="w-full py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 cursor-pointer animate-pulse"
+          className="wr-btn-brass w-full py-3.5 text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer animate-pulse"
         >
           <Swords className="w-4 h-4" />
-          <span>PROCEED TO SHIP PLACEMENT</span>
+          <span>Proceed to the Plot Table</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       ) : (
-        <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-          <span>Combat operations will unlock once both players connect.</span>
+        <div className="p-3.5 bg-[#0d0b06] border border-[#3a3423] text-center text-xs text-[#a8956c] tracking-widest uppercase flex items-center justify-center gap-2">
+          <span className="w-2 h-2 bg-[#c9a227] animate-ping" />
+          <span>Operations unlock when both officers report.</span>
         </div>
       )}
     </motion.div>

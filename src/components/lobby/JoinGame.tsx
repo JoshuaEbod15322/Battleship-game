@@ -33,18 +33,18 @@ export const JoinGame: React.FC<JoinGameProps> = ({
     const clean = code.trim().toUpperCase();
 
     if (!cleanName) {
-      setValidationError("Please enter your commander name to join.");
+      setValidationError("State your rank and name before reporting in.");
       return;
     }
 
     if (!clean) {
-      setValidationError("Please enter a room code to join.");
+      setValidationError("Enter the operation cipher to report in.");
       return;
     }
 
     if (!isValidRoomCode(clean)) {
       setValidationError(
-        "Invalid code format. Codes are 6 alphanumeric characters (e.g. A7K9P2).",
+        "Cipher rejected. Ciphers run 6 letters and figures (e.g. A7K9P2).",
       );
       return;
     }
@@ -61,9 +61,13 @@ export const JoinGame: React.FC<JoinGameProps> = ({
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
-      className="w-full max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-cyan-500/30 shadow-2xl backdrop-blur-md font-mono text-slate-100"
+      className="wr-panel w-full max-w-md mx-auto p-6 sm:p-8 text-[#e9dfc4] relative"
     >
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+      <div className="absolute -top-3 left-6 wr-plate px-3 py-0.5 text-[10px] font-bold tracking-[0.3em] uppercase">
+        Report In
+      </div>
+
+      <div className="flex items-center justify-between border-b border-[#4d452c] pb-4 mb-6 mt-2">
         <button
           id="join-game-back-btn"
           type="button"
@@ -71,34 +75,32 @@ export const JoinGame: React.FC<JoinGameProps> = ({
             sound.playButton();
             onBack();
           }}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-400 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-[11px] tracking-[0.2em] text-[#a8956c] hover:text-[#e8c84a] transition-colors cursor-pointer uppercase"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>BACK</span>
+          <span>Back</span>
         </button>
-        <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-cyan-950/60 border border-cyan-800/40">
-          CHALLENGER OPERATION
-        </div>
+        <div className="wr-stamp text-[10px] text-[#c9a227]">Challenger</div>
       </div>
 
       <div className="text-center mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mx-auto mb-3">
+        <div className="w-12 h-12 bg-[#0d0b06] border border-[#6f5d21] flex items-center justify-center text-[#c9a227] mx-auto mb-3">
           <LogIn className="w-6 h-6" />
         </div>
-        <h2 className="text-xl font-bold tracking-wider text-slate-100 uppercase">
-          JOIN GAME
+        <h2 className="wr-head text-2xl tracking-wider text-[#efe3c2] uppercase">
+          Join Operation
         </h2>
-        <p className="text-xs text-slate-400 mt-1">
-          Enter the room code issued by the host commander
+        <p className="text-xs text-[#a8956c] mt-1">
+          Present the cipher issued by the host commander
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Commander Name */}
         <div>
-          <label className="block text-[11px] uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 text-cyan-400" />
-            Your Commander Name
+          <label className="block text-[11px] uppercase tracking-[0.2em] text-[#a8956c] mb-1.5 flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-[#c9a227]" />
+            Your Rank &amp; Name
           </label>
           <input
             id="guest-commander-name-input"
@@ -106,16 +108,16 @@ export const JoinGame: React.FC<JoinGameProps> = ({
             maxLength={15}
             value={playerName}
             onChange={(e) => onPlayerNameChange(e.target.value)}
-            placeholder="Your call sign"
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors"
+            placeholder="e.g. CAPT. HALSEY"
+            className="wr-input w-full px-3.5 py-2.5 text-sm uppercase tracking-widest"
           />
         </div>
 
         {/* Room Code Input */}
         <div>
-          <label className="block text-[11px] uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
-            <Hash className="w-3.5 h-3.5 text-cyan-400" />
-            Enter Room Code
+          <label className="block text-[11px] uppercase tracking-[0.2em] text-[#a8956c] mb-1.5 flex items-center gap-1.5">
+            <Hash className="w-3.5 h-3.5 text-[#c9a227]" />
+            Operation Cipher
           </label>
           <input
             id="room-code-input"
@@ -126,8 +128,8 @@ export const JoinGame: React.FC<JoinGameProps> = ({
               setCode(e.target.value.toUpperCase());
               if (activeError) setValidationError(null);
             }}
-            placeholder="e.g. A7K9P2"
-            className="w-full text-center tracking-widest text-xl sm:text-2xl font-bold uppercase px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-cyan-400 font-mono focus:outline-none focus:border-cyan-400 transition-colors"
+            placeholder="A7K9P2"
+            className="wr-input w-full text-center tracking-[0.4em] text-xl sm:text-2xl font-bold uppercase px-4 py-3 text-[#e8c84a]"
           />
         </div>
 
@@ -136,9 +138,9 @@ export const JoinGame: React.FC<JoinGameProps> = ({
           <motion.div
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-3 rounded-xl bg-rose-950/70 border border-rose-600 text-rose-300 text-xs flex items-start gap-2"
+            className="p-3 bg-[#2a0f0c] border border-[#b3352b] text-[#e89a90] text-xs flex items-start gap-2"
           >
-            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+            <AlertTriangle className="w-4 h-4 text-[#b3352b] shrink-0 mt-0.5" />
             <span>{activeError}</span>
           </motion.div>
         )}
@@ -147,10 +149,10 @@ export const JoinGame: React.FC<JoinGameProps> = ({
           id="submit-join-game-btn"
           type="submit"
           disabled={isJoining}
-          className="w-full py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 cursor-pointer mt-4"
+          className="wr-btn-brass w-full py-3.5 text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer mt-4"
         >
           <LogIn className="w-4 h-4" />
-          <span>{isJoining ? "CONNECTING..." : "JOIN GAME"}</span>
+          <span>{isJoining ? "Signalling..." : "Report for Duty"}</span>
         </button>
       </form>
     </motion.div>

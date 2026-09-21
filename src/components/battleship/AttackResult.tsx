@@ -32,12 +32,12 @@ export const AttackResult: React.FC<AttackResultProps> = ({
         className="w-full max-w-md mx-auto my-2"
       >
         <div
-          className={`p-3 rounded-xl border font-mono flex items-center justify-between shadow-lg ${
+          className={`p-3 border flex items-center justify-between ${
             hasSunk
-              ? "bg-rose-950/90 border-rose-500 text-rose-200 shadow-rose-950/50"
+              ? "bg-[#2a0f0c] border-[#b3352b] text-[#e89a90]"
               : isHit
-                ? "bg-amber-950/80 border-amber-500 text-amber-200 shadow-amber-950/50"
-                : "bg-sky-950/70 border-sky-600/50 text-sky-200 shadow-sky-950/40"
+                ? "bg-[#241a08] border-[#c9a227] text-[#efe3c2]"
+                : "bg-[#141a13] border-[#4a4f3c] text-[#a8956c]"
           }`}
         >
           <div className="flex items-center gap-2.5">
@@ -45,37 +45,37 @@ export const AttackResult: React.FC<AttackResultProps> = ({
               {hasSunk ? "🔥" : isHit ? "💥" : "💦"}
             </span>
             <div>
-              <div className="text-xs sm:text-sm font-bold tracking-wider flex items-center gap-1.5">
+              <div className="text-xs sm:text-sm font-bold tracking-[0.15em] flex items-center gap-1.5 uppercase">
                 {hasSunk ? (
                   <>
-                    <Flame className="w-4 h-4 text-rose-400 fill-rose-400 animate-pulse" />
+                    <Flame className="w-4 h-4 text-[#b3352b] fill-[#b3352b] animate-pulse" />
                     <span>
-                      SHIP SUNK: {feedback.sunkShipName?.toUpperCase()}!
+                      Hull lost: {feedback.sunkShipName?.toUpperCase()}!
                     </span>
                   </>
                 ) : isHit ? (
-                  <span> HIT at {coordLabel}!</span>
+                  <span> Struck at {coordLabel}!</span>
                 ) : (
-                  <span> MISS at {coordLabel}</span>
+                  <span> Splash at {coordLabel} — wide</span>
                 )}
               </div>
-              <div className="text-[11px] text-slate-300/80">
+              <div className="text-[11px] opacity-80">
                 {isLocalAttacker
                   ? hasSunk
-                    ? "Target warship completely neutralized."
+                    ? "Enemy hull confirmed on the bottom."
                     : isHit
-                      ? "Direct strike confirmed on enemy hull."
-                      : "Target missed. Warhead detonated in open water."
+                      ? "Shell struck enemy steel."
+                      : "Shell fell in open sea."
                   : hasSunk
-                    ? `Your ${feedback.sunkShipName} was sunk by enemy fire!`
+                    ? `We lost the ${feedback.sunkShipName} to enemy guns!`
                     : isHit
-                      ? "Damage sustained to your fleet."
-                      : "Enemy strike splashed wide into the ocean."}
+                      ? "One of our hulls is hit."
+                      : "Enemy shell fell wide of our line."}
               </div>
             </div>
           </div>
 
-          <div className="text-right text-[11px] font-bold px-2 py-0.5 rounded bg-black/40 border border-white/10">
+          <div className="text-right text-[11px] font-bold px-2 py-0.5 wr-plate">
             {coordLabel}
           </div>
         </div>

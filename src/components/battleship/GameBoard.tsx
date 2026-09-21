@@ -22,7 +22,10 @@ interface GameBoardProps {
     name: string;
     size: number;
     emoji: string;
+    orientation: Orientation;
     coordinates: Coordinate[];
+    imageTop?: string;
+    imageDestroy?: string;
   }>;
   canAttack?: boolean;
   onAttack?: (row: number, col: number) => void;
@@ -95,78 +98,94 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     );
   };
 
+  // Helper to find the sunk ship reveal covering a coordinate (enemy board)
+  const getSunkShipAtCoord = (row: number, col: number) => {
+    return sunkShips.find((s) =>
+      s.coordinates.some((c) => c.row === row && c.col === col),
+    );
+  };
+
   return (
     <div
       id={`game-board-${isEnemy ? "enemy" : "fleet"}`}
-      className="relative flex flex-col p-2.5 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md max-w-md w-full mx-auto min-w-0"
+      className="wr-panel wr-map relative flex flex-col p-2.5 sm:p-4 max-w-md w-full mx-auto min-w-0"
     >
       {/* Board Header */}
-      <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
+      <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#4d452c]">
         <div className="flex items-center gap-2">
           {isEnemy ? (
-            <div className="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400">
+            <div className="w-7 h-7 bg-[#2a0f0c] border border-[#b3352b] flex items-center justify-center text-[#e89a90]">
               <Crosshair className="w-4 h-4" />
             </div>
           ) : (
-            <div className="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <div className="w-7 h-7 bg-[#0d0b06] border border-[#6f5d21] flex items-center justify-center text-[#c9a227]">
               <Shield className="w-4 h-4" />
             </div>
           )}
           <div>
             <h3
-              className={`font-mono text-xs sm:text-sm font-semibold tracking-wider uppercase ${
-                isEnemy ? "text-rose-400" : "text-cyan-400"
+              className={`wr-head text-xs sm:text-sm tracking-[0.2em] uppercase ${
+                isEnemy ? "text-[#e89a90]" : "text-[#e8c84a]"
               }`}
             >
               {title}
             </h3>
-            {/* <p className="text-[10px] text-slate-400 font-mono">
-              {isEnemy
-                ? canAttack
-                  ? "Target Coordinates Armed"
-                  : "Radar Surveillance Active"
-                : `Active Fleet: ${placedShips.filter((s) => !s.isSunk).length} / 5 Vessels`}
-            </p> */}
           </div>
         </div>
 
-        {/* Small naval status ping indicator */}
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-slate-950/60 border border-slate-800 text-[12px] font-mono text-slate-400">
-          <span>10×10</span>
+        {/* Chart scale plate */}
+        <div className="wr-plate px-2 py-0.5 text-[11px] font-bold tracking-[0.2em]">
+          <span> 10×10</span>
         </div>
       </div>
 
       {/* Grid with Column & Row Headers */}
       <div className="relative w-full">
         {/* Column Labels (A-J) */}
-        <div className="grid grid-cols-11 text-center font-mono text-[9px] sm:text-xs font-semibold text-slate-400 mb-1">
+        <div className="grid grid-cols-11 text-center text-[9px] sm:text-xs font-bold tracking-[0.15em] text-[#c9a227] mb-1">
           <div className="w-4 sm:w-6" /> {/* spacer for row labels */}
           {COLUMN_LABELS.map((col) => (
-            <div key={col} className="select-none text-cyan-300/70">
+            <div key={col} className="select-none">
               {col}
             </div>
           ))}
         </div>
 
         {/* Rows with labels (1-10) and grid cells */}
-        <div className="space-y-0.5 sm:space-y-1">
+        <div className="space-y-0 sm:space-y-0">
           {ROW_LABELS.map((rowLabel, rIdx) => (
             <div
               key={rowLabel}
-              className="grid grid-cols-11 items-center gap-0.5 sm:gap-1"
+              className="grid grid-cols-11 items-center gap-0 sm:gap-0"
             >
               {/* Row Label (1-10) */}
-              <div className="w-4 sm:w-6 text-right pr-0.5 sm:pr-1 font-mono text-[9px] sm:text-xs font-semibold text-cyan-300/70 select-none">
+              <div className="w-4 sm:w-6 text-right pr-0.5 sm:pr-1 text-[9px] sm:text-xs font-bold tracking-[0.15em] text-[#c9a227] select-none">
                 {rowLabel}
               </div>
 
               {/* 10 Cells in this row */}
               {COLUMN_LABELS.map((_, cIdx) => {
                 const ship = !isEnemy ? getShipAtCoord(rIdx, cIdx) : undefined;
+                const sunkReveal = isEnemy
+                  ? getSunkShipAtCoord(rIdx, cIdx)
+                  : undefined;
                 const attack = getAttackAtCoord(rIdx, cIdx);
                 const isHit = attack?.result === "hit";
                 const isMiss = attack?.result === "miss";
                 const isSunk = isSunkAtCoord(rIdx, cIdx);
+
+                // Which segment of the ship is this cell? (for image tiling)
+                // Friendly board: index within the placed ship.
+                // Enemy board: index within the sunk-ship reveal.
+                const shipSegmentIndex = ship
+                  ? ship.coordinates.findIndex(
+                      (c) => c.row === rIdx && c.col === cIdx,
+                    )
+                  : sunkReveal
+                    ? sunkReveal.coordinates.findIndex(
+                        (c) => c.row === rIdx && c.col === cIdx,
+                      )
+                    : 0;
 
                 // Check if this cell is part of placement preview
                 const isPreview = placementPreviewCoords.some(
@@ -180,7 +199,18 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                     col={cIdx}
                     isEnemy={isEnemy}
                     hasShip={Boolean(ship)}
-                    shipEmoji={ship?.emoji}
+                    shipEmoji={ship?.emoji ?? sunkReveal?.emoji}
+                    shipImageTop={ship?.imageTop}
+                    shipImageDestroy={
+                      ship?.imageDestroy ?? sunkReveal?.imageDestroy
+                    }
+                    shipSegmentIndex={shipSegmentIndex}
+                    shipSize={ship?.size ?? sunkReveal?.size ?? 1}
+                    shipOrientation={
+                      ship?.orientation ??
+                      sunkReveal?.orientation ??
+                      "horizontal"
+                    }
                     isHit={isHit}
                     isMiss={isMiss}
                     isSunk={isSunk}

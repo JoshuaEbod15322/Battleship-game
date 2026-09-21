@@ -1,16 +1,52 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   WAR ROOM 1944 — shared theme system
+   WWII operations-room language: oiled steel frames, parchment orders,
+   brass fittings, signal-red stamps, typewriter dispatches.
+   Every screen composes these tokens so the whole game reads as one room.
+   ========================================================================== */
+
 @layer base {
+  :root {
+    --wr-ink: #12100a; /* page depth, near-black olive */
+    --wr-panel: #211c11; /* steel-framed panel */
+    --wr-panel-deep: #171309; /* inset wells */
+    --wr-paper: #d9c9a3; /* parchment */
+    --wr-paper-hi: #efe3c2; /* parchment highlight */
+    --wr-paper-dim: #a8956c; /* muted parchment text */
+    --wr-brass: #c9a227; /* brass fittings */
+    --wr-brass-hi: #e8c84a; /* polished brass */
+    --wr-brass-dim: #6f5d21; /* dark brass borders */
+    --wr-olive: #6b6238; /* olive drab */
+    --wr-signal: #b3352b; /* signal red */
+    --wr-ink-text: #241d0e; /* ink on parchment */
+  }
+
   body {
     font-family:
-      "Rajdhani",
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      sans-serif;
-    background-color: #020617;
-    color: #f8fafc;
+      "Special Elite",
+      "Courier New",
+      Courier,
+      monospace;
+    background-color: var(--wr-ink);
+    background-image:
+      radial-gradient(
+        ellipse 90% 60% at 50% -10%,
+        rgba(201, 162, 39, 0.09),
+        transparent 60%
+      ),
+      radial-gradient(
+        ellipse 120% 100% at 50% 110%,
+        rgba(0, 0, 0, 0.6),
+        transparent 55%
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(217, 201, 163, 0.022) 0 1px,
+        transparent 1px 3px
+      );
+    color: #e9dfc4;
     overflow-x: hidden;
   }
 
@@ -19,14 +55,30 @@
   h3,
   h4,
   h5,
-  h6 {
-    font-family: "Chakra Petch", "Rajdhani", sans-serif;
+  h6,
+  .wr-head {
+    font-family:
+      "Black Ops One",
+      "Arial Black",
+      "Impact",
+      sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.08em;
   }
 
   code,
   pre,
   .font-mono {
-    font-family: "JetBrains Mono", monospace;
+    font-family:
+      "Special Elite",
+      "Courier New",
+      Courier,
+      monospace;
+  }
+
+  ::selection {
+    background: var(--wr-brass);
+    color: #171309;
   }
 }
 
@@ -43,18 +95,173 @@
   animation: spin-slow 8s linear infinite;
 }
 
-/* Custom Tactical Scrollbar */
-::-webkit-scrollbar {
+/* Framed steel panel: double-ruled brass frame on oiled dark steel. */
+.wr-panel {
+  background:
+    linear-gradient(180deg, rgba(201, 162, 39, 0.06), transparent 22%),
+    linear-gradient(180deg, #26200f, #1a150b);
+  border: 1px solid var(--wr-brass-dim);
+  outline: 1px solid rgba(201, 162, 39, 0.22);
+  outline-offset: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(239, 227, 194, 0.08),
+    0 18px 50px rgba(0, 0, 0, 0.55);
+}
+
+/* Parchment order plate: typed dispatch strip for headers and labels. */
+.wr-plate {
+  background: linear-gradient(180deg, var(--wr-paper-hi), var(--wr-paper));
+  color: var(--wr-ink-text);
+  border: 1px solid #7a6a42;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Brass order button: the one action that matters on a panel. */
+.wr-btn-brass {
+  background: linear-gradient(180deg, var(--wr-brass-hi), var(--wr-brass) 55%, #9a7a1c);
+  color: #1d1607;
+  border: 1px solid #5c4c14;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 4px 14px rgba(201, 162, 39, 0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  transition:
+    filter 0.15s ease,
+    transform 0.05s ease;
+}
+.wr-btn-brass:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+.wr-btn-brass:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.wr-btn-brass:disabled {
+  filter: grayscale(0.7) brightness(0.6);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Steel ghost button: secondary war-room controls. */
+.wr-btn-steel {
+  background: linear-gradient(180deg, #2c2a20, #1c1912);
+  color: var(--wr-paper);
+  border: 1px solid #4d452c;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease,
+    background 0.15s ease;
+}
+.wr-btn-steel:hover:not(:disabled) {
+  border-color: var(--wr-brass);
+  color: var(--wr-brass-hi);
+}
+.wr-btn-steel:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Inset typewriter field. */
+.wr-input {
+  background: #0d0b06;
+  border: 1px solid #4d452c;
+  color: var(--wr-paper-hi);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.wr-input::placeholder {
+  color: #6e6040;
+}
+.wr-input:focus {
+  outline: none;
+  border-color: var(--wr-brass);
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(201, 162, 39, 0.4);
+}
+
+/* Rubber-stamp tag: rotated, double-bordered, signal red or brass. */
+.wr-stamp {
+  display: inline-block;
+  border: 2px solid currentColor;
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+  padding: 0.15rem 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  transform: rotate(-2deg);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3CfeComposite operator='in' in2='SourceGraphic'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+}
+
+/* Brass rule with center diamond, for dossier dividers. */
+.wr-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--wr-brass-dim);
+}
+.wr-rule::before,
+.wr-rule::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--wr-brass-dim),
+    transparent
+  );
+}
+.wr-rule > span {
   width: 6px;
   height: 6px;
+  transform: rotate(45deg);
+  background: var(--wr-brass-dim);
+  flex-shrink: 0;
+}
+
+/* Map-table felt for board panels. */
+.wr-map {
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(201, 162, 39, 0.07),
+      transparent 60%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(217, 201, 163, 0.03) 0 1px,
+      transparent 1px 28px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(217, 201, 163, 0.03) 0 1px,
+      transparent 1px 28px
+    ),
+    linear-gradient(180deg, #20241a, #161a12);
+}
+
+/* War-room scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: #0d0b06;
 }
 ::-webkit-scrollbar-thumb {
-  background: #0e7490;
-  border-radius: 9999px;
+  background: var(--wr-brass-dim);
+  border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #06b6d4;
+  background: var(--wr-brass);
 }

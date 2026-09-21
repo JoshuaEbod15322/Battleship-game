@@ -21,23 +21,23 @@ export function SoundToggle() {
     <button
       id="sound-toggle-btn"
       onClick={toggle}
-      className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-mono font-medium border transition-colors cursor-pointer ${
+      className={`inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 text-[11px] font-bold tracking-[0.2em] uppercase border transition-colors cursor-pointer ${
         muted
-          ? "bg-slate-900/80 border-slate-700 text-slate-400 hover:text-slate-200"
-          : "bg-cyan-950/60 border-cyan-700/60 text-cyan-300 hover:bg-cyan-900/60 shadow-sm shadow-cyan-900/30"
+          ? "bg-[#0d0b06] border-[#3a3423] text-[#6e6040] hover:text-[#a8956c]"
+          : "bg-[#0d0b06] border-[#6f5d21] text-[#e8c84a] hover:bg-[#2b2413]"
       }`}
-      title={muted ? "Unmute tactical audio" : "Mute tactical audio"}
+      title={muted ? "Unmute the wireless" : "Mute the wireless"}
       aria-label="Toggle sound"
     >
       {muted ? (
         <>
-          <VolumeX className="w-3.5 h-3.5 text-slate-500" />
-          <span className="hidden sm:inline">AUDIO OFF</span>
+          <VolumeX className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Silent</span>
         </>
       ) : (
         <>
-          <Volume2 className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-          <span className="hidden sm:inline">AUDIO ON</span>
+          <Volume2 className="w-3.5 h-3.5 animate-pulse" />
+          <span className="hidden sm:inline">Wireless</span>
         </>
       )}
     </button>

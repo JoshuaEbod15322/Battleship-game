@@ -27,7 +27,7 @@ export const GameOver: React.FC<GameOverProps> = ({
           particleCount: 120,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ["#06b6d4", "#38bdf8", "#fbbf24", "#ffffff"],
+          colors: ["#c9a227", "#e8c84a", "#d9c9a3", "#7da05c"],
         });
       } catch {}
     }
@@ -37,54 +37,47 @@ export const GameOver: React.FC<GameOverProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg">
       <motion.div
         id="game-over-modal"
-        initial={{ opacity: 0, scale: 0.85, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-        className={`w-full max-w-md p-8 rounded-3xl border text-center shadow-2xl font-mono overflow-hidden relative ${
-          isWinner
-            ? "bg-slate-900/95 border-amber-500/60 shadow-amber-950/50"
-            : "bg-slate-900/95 border-rose-600/60 shadow-rose-950/50"
-        }`}
+        className="wr-panel w-full max-w-md p-8 text-center overflow-hidden relative"
       >
-        {/* Glow ambient header */}
-        <div
-          className={`absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-30 ${
-            isWinner ? "bg-amber-400" : "bg-rose-600"
-          }`}
-        />
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 wr-plate px-4 py-0.5 text-[10px] font-bold tracking-[0.35em] uppercase whitespace-nowrap">
+          After-Action Report
+        </div>
+
+        {/* Stamp */}
+        <div className="mt-4 mb-2 flex justify-center">
+          <span
+            className={`wr-stamp wr-head text-lg px-5 py-1 ${
+              isWinner ? "text-[#7da05c]" : "text-[#b3352b]"
+            }`}
+          >
+            {isWinner ? "Victory" : "Defeat"}
+          </span>
+        </div>
 
         {/* Icon */}
-        <div className="relative mb-4 flex justify-center">
+        <div className="relative mb-4 mt-4 flex justify-center">
           {isWinner ? (
-            <div className="w-20 h-20 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 shadow-xl shadow-amber-500/20">
+            <div className="w-20 h-20 bg-[#0d0b06] border border-[#c9a227] flex items-center justify-center text-[#e8c84a]">
               <Trophy className="w-10 h-10 animate-bounce" />
             </div>
           ) : (
-            <div className="w-20 h-20 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shadow-xl shadow-rose-500/20">
+            <div className="w-20 h-20 bg-[#0d0b06] border border-[#b3352b] flex items-center justify-center text-[#b3352b]">
               <Skull className="w-10 h-10 animate-pulse" />
             </div>
           )}
         </div>
 
-        {/* Title */}
-        <h2
-          className={`text-2xl sm:text-3xl font-extrabold tracking-wider uppercase mb-2 ${
-            isWinner ? "text-amber-400" : "text-rose-400"
-          }`}
-        >
-          {isWinner ? "VICTORY" : " DEFEAT"}
-        </h2>
-
-        <div className="text-base font-bold text-slate-100 mb-1">
-          {isWinner
-            ? "Enemy Fleet Destroyed"
-            : "Your fleet has been destroyed."}
+        <div className="text-base font-bold text-[#efe3c2] mb-1 uppercase tracking-[0.15em]">
+          {isWinner ? "Enemy fleet on the bottom" : "Our fleet is lost."}
         </div>
 
-        <p className="text-xs text-slate-400 mb-8 max-w-xs mx-auto">
+        <p className="text-xs text-[#a8956c] mb-8 max-w-xs mx-auto">
           {isWinner
-            ? "You dominated the battlefield and sank every hostile warship."
-            : "Hostile forces overwhelmed your naval defenses. Regroup and plan your return."}
+            ? "Every hostile hull sunk. The sea lane is ours, Commander."
+            : "Hostile guns found their marks. Regroup, re-chart, return."}
         </p>
 
         {/* Action Buttons */}
@@ -96,10 +89,10 @@ export const GameOver: React.FC<GameOverProps> = ({
               sound.playButton();
               onPlayAgain();
             }}
-            className="w-full py-3.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 cursor-pointer"
+            className="wr-btn-brass w-full py-3.5 px-4 text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>PLAY AGAIN</span>
+            <span>New Engagement</span>
           </button>
 
           <button
@@ -109,10 +102,10 @@ export const GameOver: React.FC<GameOverProps> = ({
               sound.playButton();
               onReturnHome();
             }}
-            className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-2 cursor-pointer border border-slate-700"
+            className="wr-btn-steel w-full py-3 px-4 text-xs flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Home className="w-4 h-4 text-slate-400" />
-            <span>RETURN HOME</span>
+            <Home className="w-4 h-4" />
+            <span>War Room Door</span>
           </button>
         </div>
       </motion.div>

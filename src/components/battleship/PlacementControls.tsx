@@ -38,21 +38,25 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
   return (
     <div
       id="placement-controls"
-      className="p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md max-w-md w-full mx-auto space-y-4 font-mono"
+      className="wr-panel p-3 sm:p-4 max-w-md w-full mx-auto space-y-4 relative"
     >
-      <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
+      <div className="absolute -top-3 left-6 wr-plate px-3 py-0.5 text-[10px] font-bold tracking-[0.3em] uppercase">
+        Fleet Manifest
+      </div>
+
+      <div className="flex items-center justify-between border-b border-[#4d452c] pb-2.5 mt-2">
         <div>
-          <h3 className="text-xs sm:text-sm font-bold tracking-wider text-cyan-400 uppercase">
-            Your Fleet Deployment
+          <h3 className="wr-head text-xs sm:text-sm tracking-[0.2em] text-[#e8c84a] uppercase">
+            Deployment Orders
           </h3>
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[11px] text-[#a8956c]">
             {allShipsPlaced
-              ? "All 5 ships deployed. Confirm tactical ready."
-              : "Select a ship, choose sector on grid."}
+              ? "All 5 hulls on the chart. Sign the order."
+              : "Pick a hull, stamp it on the chart."}
           </p>
         </div>
-        <div className="text-xs font-bold text-slate-300">
-          <span className="text-cyan-400">{placedShips.length}</span> /{" "}
+        <div className="text-xs font-bold text-[#e9dfc4]">
+          <span className="text-[#e8c84a]">{placedShips.length}</span> /{" "}
           {SHIPS.length}
         </div>
       </div>
@@ -72,30 +76,41 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
                 sound.playButton();
                 onSelectShip(ship);
               }}
-              className={`w-full flex items-center justify-between p-2.5 rounded-xl border transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between p-2.5 border transition-all cursor-pointer ${
                 isSelected
-                  ? "bg-cyan-950/80 border-cyan-400 shadow-md shadow-cyan-900/30"
+                  ? "bg-[#2b2413] border-[#c9a227]"
                   : isPlaced
-                    ? "bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700"
-                    : "bg-slate-900/60 border-cyan-900/40 text-slate-200 hover:border-cyan-600/60"
+                    ? "bg-[#0d0b06] border-[#3a3423] hover:border-[#6f5d21]"
+                    : "bg-[#14110a] border-[#4d452c] hover:border-[#c9a227]"
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <span className="text-xl" role="img" aria-label={ship.name}>
-                  {ship.emoji}
-                </span>
+                <div className="w-10 h-8 flex items-center justify-center shrink-0 bg-[#0d0b06] border border-[#3a3423]">
+                  {ship.imageSide ? (
+                    <img
+                      src={ship.imageSide}
+                      alt={ship.name}
+                      className="w-full h-full object-contain sepia-[0.35]"
+                      draggable={false}
+                    />
+                  ) : (
+                    <span className="text-xl" role="img" aria-label={ship.name}>
+                      {ship.emoji}
+                    </span>
+                  )}
+                </div>
                 <div className="text-left">
                   <div className="text-md font-semibold flex items-center gap-1.5">
                     <span
                       className={
-                        isSelected ? "text-cyan-300" : "text-slate-200"
+                        isSelected ? "text-[#e8c84a]" : "text-[#e9dfc4]"
                       }
                     >
                       {ship.name}
                     </span>
                     {isPlaced && (
-                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/60">
-                        PLACED
+                      <span className="wr-stamp text-[9px] text-[#7da05c]">
+                        Placed
                       </span>
                     )}
                   </div>
@@ -107,12 +122,12 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
                 {Array.from({ length: ship.size }).map((_, i) => (
                   <div
                     key={i}
-                    className={`w-2.5 h-3 rounded-xs border ${
+                    className={`w-2.5 h-3 border ${
                       isPlaced
-                        ? "bg-cyan-500/60 border-cyan-400"
+                        ? "bg-[#6b6238] border-[#c9a227]"
                         : isSelected
-                          ? "bg-cyan-400 border-cyan-300 animate-pulse"
-                          : "bg-slate-800 border-slate-700"
+                          ? "bg-[#c9a227] border-[#e8c84a] animate-pulse"
+                          : "bg-[#0d0b06] border-[#4d452c]"
                     }`}
                   />
                 ))}
@@ -132,19 +147,15 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
             sound.playButton();
             onRotate();
           }}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
-            isReady
-              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
-              : "bg-slate-950/80 border-slate-700 hover:border-cyan-500 text-slate-200 cursor-pointer"
-          }`}
+          className="wr-btn-steel flex items-center justify-center gap-1.5 py-2 px-2.5 text-[11px] cursor-pointer"
           title={
             isReady
-              ? "Fleet locked"
-              : `Rotate ship placement orientation (currently ${orientation}) or press R`
+              ? "Orders signed"
+              : `Turn the hull (now ${orientation}) or press R`
           }
         >
-          <RotateCw className="w-3.5 h-3.5 text-cyan-400" />
-          <span>ROTATE</span>
+          <RotateCw className="w-3.5 h-3.5 text-[#c9a227]" />
+          <span>Turn</span>
         </button>
 
         <button
@@ -155,46 +166,38 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
             sound.playButton();
             onRandomize();
           }}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
-            isReady
-              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
-              : "bg-slate-950/80 border-slate-700 hover:border-cyan-500 text-slate-200 cursor-pointer"
-          }`}
-          title={isReady ? "Fleet locked" : "Randomize fleet placement"}
+          className="wr-btn-steel flex items-center justify-center gap-1.5 py-2 px-2.5 text-[11px] cursor-pointer"
+          title={isReady ? "Orders signed" : "Let the staff place the fleet"}
         >
-          <Dices className="w-3.5 h-3.5 text-amber-400" />
-          <span>RANDOM 🎲</span>
+          <Dices className="w-3.5 h-3.5 text-[#c9a227]" />
+          <span>Staff Plot</span>
         </button>
 
         <button
           id="reset-btn"
           type="button"
-          className={`col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
-            isReady
-              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
-              : "bg-slate-950/80 border-slate-700 hover:border-rose-500 text-slate-300 cursor-pointer"
-          }`}
+          className="wr-btn-steel col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 py-2 px-2.5 text-[11px] cursor-pointer"
           disabled={isReady}
           onClick={() => {
             sound.playButton();
             onReset();
           }}
-          title={isReady ? "Fleet locked" : "Clear all placed ships"}
+          title={isReady ? "Orders signed" : "Strike every hull from the chart"}
         >
-          <RotateCcw className="w-3.5 h-3.5 text-rose-400" />
-          <span>RESET</span>
+          <RotateCcw className="w-3.5 h-3.5 text-[#b3352b]" />
+          <span>Recall</span>
         </button>
       </div>
 
       {/* Opponent readiness notice */}
-      <div className="text-[11px] p-2 rounded-lg bg-slate-950/60 border border-slate-800 flex items-center justify-between text-slate-400">
-        <span>Opponent Status:</span>
+      <div className="text-[11px] p-2 bg-[#0d0b06] border border-[#4d452c] flex items-center justify-between text-[#a8956c]">
+        <span className="tracking-[0.2em] uppercase">Rival staff:</span>
         <span
-          className={`font-bold flex items-center gap-1 ${
-            opponentReady ? "text-emerald-400" : "text-amber-400"
+          className={`font-bold flex items-center gap-1.5 tracking-widest uppercase ${
+            opponentReady ? "text-[#7da05c]" : "text-[#c9a227]"
           }`}
         >
-          {opponentReady ? "🟢 Ready for Combat" : "⏳ Placing Ships..."}
+          {opponentReady ? "Sealed & ready" : "Still plotting..."}
         </span>
       </div>
 
@@ -207,27 +210,27 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
           sound.playButton();
           onReady();
         }}
-        className={`w-full py-3 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
+        className={`w-full py-3 text-xs sm:text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
           isReady
-            ? "bg-emerald-950 border border-emerald-600 text-emerald-400 cursor-default"
+            ? "bg-[#1c2415] border border-[#7da05c] text-[#7da05c] cursor-default"
             : allShipsPlaced
-              ? "bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/25 cursor-pointer animate-pulse"
-              : "bg-slate-800/60 text-slate-500 border border-slate-800 cursor-not-allowed"
+              ? "wr-btn-brass animate-pulse"
+              : "bg-[#14110a] text-[#6e6040] border border-[#3a3423] cursor-not-allowed"
         }`}
       >
         {isReady ? (
           <>
-            <Check className="w-4 h-4 text-emerald-400" />
-            <span>FLEET LOCKED &amp; READY</span>
+            <Check className="w-4 h-4" />
+            <span>Orders Signed</span>
           </>
         ) : allShipsPlaced ? (
           <>
-            <span>LOCK IN FLEET &amp; BATTLE</span>
+            <span>Sign Orders &amp; Sail</span>
           </>
         ) : (
           <>
-            <AlertCircle className="w-4 h-4 text-slate-500" />
-            <span>PLACE ALL 5 SHIPS FIRST</span>
+            <AlertCircle className="w-4 h-4" />
+            <span>Five hulls required</span>
           </>
         )}
       </button>

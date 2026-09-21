@@ -261,7 +261,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-screen bg-[#12100a] text-[#e9dfc4] flex flex-col">
       {/* 1. HOME PHASE */}
       {phase === "home" && (
         <Home

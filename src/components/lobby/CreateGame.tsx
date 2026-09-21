@@ -54,42 +54,44 @@ export const CreateGame: React.FC<CreateGameProps> = ({
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
-      className="w-full max-w-md mx-auto p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-cyan-500/30 shadow-2xl backdrop-blur-md font-mono text-slate-100"
+      className="wr-panel w-full max-w-md mx-auto p-6 sm:p-8 text-[#e9dfc4] relative"
     >
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+      <div className="absolute -top-3 left-6 wr-plate px-3 py-0.5 text-[10px] font-bold tracking-[0.3em] uppercase">
+        Host Operation
+      </div>
+
+      <div className="flex items-center justify-between border-b border-[#4d452c] pb-4 mb-6 mt-2">
         <button
           id="create-game-back-btn"
           onClick={() => {
             sound.playButton();
             onBack();
           }}
-          className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-400 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 text-[11px] tracking-[0.2em] text-[#a8956c] hover:text-[#e8c84a] transition-colors cursor-pointer uppercase"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>BACK</span>
+          <span>Back</span>
         </button>
-        <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-cyan-950/60 border border-cyan-800/40">
-          HOST OPERATION
-        </div>
+        <div className="wr-stamp text-[10px] text-[#c9a227]">Orders Cut</div>
       </div>
 
       <div className="text-center mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mx-auto mb-3">
+        <div className="w-12 h-12 bg-[#0d0b06] border border-[#6f5d21] flex items-center justify-center text-[#c9a227] mx-auto mb-3">
           <Shield className="w-6 h-6" />
         </div>
-        <h2 className="text-xl font-bold tracking-wider text-slate-100 uppercase">
-          GAME CREATED
+        <h2 className="wr-head text-2xl tracking-wider text-[#efe3c2] uppercase">
+          Operation Opened
         </h2>
-        <p className="text-xs text-slate-400 mt-1">
-          Share this security code with your rival commander
+        <p className="text-xs text-[#a8956c] mt-1">
+          Pass this cipher to your rival commander
         </p>
       </div>
 
       {/* Commander Call Sign */}
       <div className="mb-5">
-        <label className="block text-[11px] uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1.5">
-          <User className="w-3.5 h-3.5 text-cyan-400" />
-          Your Commander Name
+        <label className="block text-[11px] uppercase tracking-[0.2em] text-[#a8956c] mb-1.5 flex items-center gap-1.5">
+          <User className="w-3.5 h-3.5 text-[#c9a227]" />
+          Your Rank &amp; Name
         </label>
         <input
           id="host-commander-name-input"
@@ -97,17 +99,20 @@ export const CreateGame: React.FC<CreateGameProps> = ({
           maxLength={15}
           value={playerName}
           onChange={(e) => onPlayerNameChange(e.target.value)}
-          placeholder="Your call sign"
-          className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors"
+          placeholder="e.g. ADM. NIMITZ"
+          className="wr-input w-full px-3.5 py-2.5 text-sm uppercase tracking-widest"
         />
       </div>
 
       {/* Big Room Code Box */}
-      <div className="p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/30 text-center mb-5">
-        <div className="text-[10px] uppercase tracking-widest text-slate-400 mb-1">
-          Room Code
+      <div className="p-4 bg-[#0d0b06] border border-[#6f5d21] text-center mb-5 relative">
+        <div className="absolute top-1 left-2 text-[9px] tracking-[0.3em] text-[#6e6040] uppercase">
+          Cipher
         </div>
-        <div className="text-3xl sm:text-4xl font-extrabold tracking-widest text-cyan-400 font-mono select-all">
+        <div className="absolute top-1 right-2 text-[9px] tracking-[0.3em] text-[#6e6040] uppercase">
+          Eyes Only
+        </div>
+        <div className="text-3xl sm:text-4xl font-bold tracking-[0.3em] text-[#e8c84a] select-all mt-2">
           {roomCode}
         </div>
       </div>
@@ -118,17 +123,17 @@ export const CreateGame: React.FC<CreateGameProps> = ({
           id="copy-room-code-btn"
           type="button"
           onClick={handleCopyCode}
-          className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-cyan-500 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="wr-btn-steel py-2.5 px-3 text-[11px] transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           {copiedCode ? (
             <>
-              <Check className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-400">COPIED!</span>
+              <Check className="w-4 h-4 text-[#7da05c]" />
+              <span className="text-[#7da05c]">Copied!</span>
             </>
           ) : (
             <>
-              <Copy className="w-4 h-4 text-cyan-400" />
-              <span>COPY CODE</span>
+              <Copy className="w-4 h-4 text-[#c9a227]" />
+              <span>Copy Cipher</span>
             </>
           )}
         </button>
@@ -137,17 +142,17 @@ export const CreateGame: React.FC<CreateGameProps> = ({
           id="copy-invite-link-btn"
           type="button"
           onClick={handleCopyLink}
-          className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-cyan-500 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="wr-btn-steel py-2.5 px-3 text-[11px] transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           {copiedLink ? (
             <>
-              <Check className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-400">COPIED LINK!</span>
+              <Check className="w-4 h-4 text-[#7da05c]" />
+              <span className="text-[#7da05c]">Copied!</span>
             </>
           ) : (
             <>
-              <Share2 className="w-4 h-4 text-cyan-400" />
-              <span>INVITE LINK</span>
+              <Share2 className="w-4 h-4 text-[#c9a227]" />
+              <span>Sealed Letter</span>
             </>
           )}
         </button>
@@ -155,22 +160,23 @@ export const CreateGame: React.FC<CreateGameProps> = ({
 
       {/* Waiting Status Panel */}
       {error && (
-        <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-600 text-rose-300 text-xs mb-4">
+        <div className="p-3 bg-[#2a0f0c] border border-[#b3352b] text-[#e89a90] text-xs mb-4">
           {error}
         </div>
       )}
-      <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center">
-        <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-300 mb-1">
-          <Users className="w-4 h-4 text-cyan-400" />
-          <span>
-            {opponentConnected ? "Opponent Joined!" : "Waiting for opponent..."}
-          </span>
-        </div>
-        <div className="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+      <div className="p-4 bg-[#0d0b06] border border-[#4d452c] text-center">
+        <div className="flex items-center justify-center gap-2 text-xs font-bold tracking-[0.15em] text-[#e9dfc4] mb-1 uppercase">
+          <Users className="w-4 h-4 text-[#c9a227]" />
           <span>
             {opponentConnected
-              ? "Synchronizing tactical grid with rival..."
+              ? "Rival officer arrived!"
+              : "Awaiting rival officer..."}
+          </span>
+        </div>
+        <div className="text-[11px] text-[#a8956c] flex items-center justify-center gap-1.5">
+          <span>
+            {opponentConnected
+              ? "Synchronizing charts with the enemy..."
               : "Stand by at your battlestation"}
           </span>
         </div>

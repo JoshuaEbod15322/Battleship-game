@@ -56,7 +56,10 @@ export function useMultiplayer(
       name: string;
       size: number;
       emoji: string;
+      orientation: "horizontal" | "vertical";
       coordinates: Coordinate[];
+      imageTop?: string;
+      imageDestroy?: string;
     }>
   >([]);
 
@@ -387,7 +390,10 @@ export function useMultiplayer(
                 name: string;
                 size: number;
                 emoji: string;
+                orientation: "horizontal" | "vertical";
                 coordinates: Coordinate[];
+                imageTop?: string;
+                imageDestroy?: string;
               }
             | undefined = undefined;
           let updatedMyFleet = [...currentFleet];
@@ -406,7 +412,10 @@ export function useMultiplayer(
                 name: hitShip.name,
                 size: hitShip.size,
                 emoji: hitShip.emoji,
+                orientation: hitShip.orientation,
                 coordinates: hitShip.coordinates,
+                imageTop: hitShip.imageTop,
+                imageDestroy: hitShip.imageDestroy,
               };
             }
           }

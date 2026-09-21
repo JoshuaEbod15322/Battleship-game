@@ -17,7 +17,10 @@ export type ShipDefinition = {
   name: string;
   size: number;
   emoji: string;
-  image?: string;
+  imageSide?: string;
+  imageTop?: string;
+  /** Shown on the board when the ship is fully sunk */
+  imageDestroy?: string;
   description?: string;
 };
 
@@ -26,12 +29,26 @@ export type PlacedShip = {
   name: string;
   size: number;
   emoji: string;
-  image?: string;
+  imageSide?: string;
+  imageTop?: string;
+  imageDestroy?: string;
   origin: Coordinate;
   orientation: Orientation;
   coordinates: Coordinate[];
   hits: number;
   isSunk: boolean;
+};
+
+/** Public reveal of a ship once it has been fully destroyed */
+export type SunkShipReveal = {
+  id: ShipType;
+  name: string;
+  size: number;
+  emoji: string;
+  orientation: Orientation;
+  coordinates: Coordinate[];
+  imageTop?: string;
+  imageDestroy?: string;
 };
 
 export type CellState = "empty" | "ship" | "hit" | "miss";
@@ -114,13 +131,7 @@ export type AttackResultPayload = {
   row: number;
   col: number;
   result: "hit" | "miss";
-  sunkShip?: {
-    id: ShipType;
-    name: string;
-    size: number;
-    emoji: string;
-    coordinates: Coordinate[];
-  };
+  sunkShip?: SunkShipReveal;
   allSunk: boolean;
   attackerId: string;
   attackerRole: PlayerRole;

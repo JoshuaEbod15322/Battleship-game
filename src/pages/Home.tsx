@@ -26,62 +26,83 @@ export const Home: React.FC<HomeProps> = ({
   invitedRoomCode,
 }) => {
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden font-sans">
-      {/* Background Naval Radar Grid Effect */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black -z-10" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#082f4915_1px,transparent_1px),linear-gradient(to_bottom,#082f4915_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] -z-10" />
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
+      {/* War-room wall: map grid fading into dark oil-smoke */}
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#c9a22714_1px,transparent_1px),linear-gradient(to_bottom,#c9a22714_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_65%_55%_at_50%_45%,#000_60%,transparent_100%)]" />
+      <div className="absolute inset-x-0 top-0 -z-10 flex justify-center pt-10 pointer-events-none opacity-25">
+        <div className="w-[130vmax] h-[130vmax] rounded-full motion-safe:animate-spin [animation-duration:60s] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_340deg,#c9a22755_355deg,transparent_360deg)]" />
+      </div>
 
-      {/* Top Controls Bar */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between max-w-5xl mx-auto z-20">
-        <div className="flex items-center gap-1">
-          <div className="w-8 h-8 flex items-center justify-center text-cyan-400">
-            <Anchor className="w-6 h-6" />
+      {/* Top command strip */}
+      <div className="absolute top-0 left-0 right-0 z-20 border-b border-[#4d452c] bg-[#14110a]/90 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 flex items-center justify-center text-[#c9a227] border border-[#6f5d21] bg-[#0d0b06]">
+              <Anchor className="w-5 h-5" />
+            </div>
+            <span className="wr-head text-sm tracking-[0.25em] text-[#d9c9a3] hidden sm:inline">
+              NAVAL OPERATIONS
+            </span>
+            <span className="wr-head text-sm tracking-[0.25em] text-[#d9c9a3] sm:hidden">
+              WAR ROOM
+            </span>
           </div>
-          <span className="font-mono text-lg tracking-wider text-cyan-400/80 font-bold hidden sm:inline">
-            USN TACTICAL GRID
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <SoundToggle />
+          <div className="flex items-center gap-2">
+            <SoundToggle />
+          </div>
         </div>
       </div>
 
-      {/* Main Home Card */}
+      {/* Main dossier */}
       <motion.div
         id="home-main-card"
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
+        initial={{ opacity: 0, scale: 0.97, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.35 }}
-        className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-slate-900/85 border border-cyan-500/30 shadow-2xl shadow-cyan-950/60 backdrop-blur-xl text-center relative z-10 font-mono"
+        className="wr-panel w-full max-w-md mt-14 p-6 sm:p-8 text-center relative z-10"
       >
-        {/* Radar Icon Emblem */}
-        <div className="relative w-20 h-20 mx-auto mb-5">
-          <div className="absolute inset-0 rounded-full bg-cyan-500/10 border border-cyan-400/40 animate-pulse" />
-          <div className="w-full h-full rounded-full border border-cyan-500/60 flex items-center justify-center text-cyan-400">
+        {/* File tab */}
+        <div className="absolute -top-3 left-6 wr-plate px-3 py-0.5 text-[10px] font-bold tracking-[0.3em] uppercase">
+          File № 1944-B
+        </div>
+        <div className="absolute -top-3 right-6 wr-stamp text-[10px] text-[#b3352b]">
+          Top Secret
+        </div>
+
+        {/* Brass emblem */}
+        <div className="relative w-20 h-20 mx-auto mb-5 mt-2">
+          <div className="absolute inset-0 border border-[#6f5d21] rotate-45" />
+          <div className="absolute inset-1.5 border border-[#6f5d21]/60 rotate-45" />
+          <div className="absolute inset-0 flex items-center justify-center text-[#c9a227]">
             <Radar className="w-9 h-9 animate-spin-slow" />
           </div>
         </div>
 
-        {/* Title */}
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-widest text-slate-100 uppercase">
-          BATTLESHIP
+        {/* Title block */}
+        <p className="text-[10px] tracking-[0.4em] uppercase text-[#a8956c] mb-1">
+          Admiralty Order // Two Commanders
+        </p>
+        <h1 className="wr-head text-4xl sm:text-5xl text-[#efe3c2] uppercase leading-none">
+          Battleship
         </h1>
-
-        {/* Subtitle */}
-        <p className="text-xs sm:text-sm font-semibold text-cyan-400 tracking-wider mt-2 mb-8 uppercase">
+        <div className="wr-rule my-4">
+          <span />
+        </div>
+        <p className="text-xs tracking-[0.2em] text-[#c9a227] uppercase mb-7">
           Command your fleet. Sink theirs.
         </p>
 
-        {/* If invited room code detected from URL */}
+        {/* Incoming invite dispatch */}
         {invitedRoomCode && (
-          <div className="mb-6 p-3.5 rounded-2xl bg-cyan-950/80 border border-cyan-400 text-cyan-200 text-xs text-left flex items-start gap-2.5 shadow-md">
-            <ShieldAlert className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+          <div className="mb-6 p-3.5 bg-[#0d0b06] border border-[#c9a227] text-[#e9dfc4] text-xs text-left flex items-start gap-2.5">
+            <ShieldAlert className="w-4 h-4 text-[#c9a227] shrink-0 mt-0.5" />
             <div>
-              <div className="font-bold">Incoming Combat Invite!</div>
-              <div className="text-[11px] text-cyan-300/80 mt-0.5">
-                You've been invited to join match{" "}
-                <strong className="text-white tracking-wider">
+              <div className="font-bold tracking-widest uppercase">
+                Sealed orders received
+              </div>
+              <div className="text-[11px] text-[#a8956c] mt-0.5">
+                You are summoned to operation{" "}
+                <strong className="text-[#efe3c2] tracking-widest">
                   {invitedRoomCode}
                 </strong>
                 .
@@ -90,7 +111,7 @@ export const Home: React.FC<HomeProps> = ({
           </div>
         )}
 
-        {/* Action Buttons */}
+        {/* Orders */}
         <div className="space-y-3">
           <button
             id="home-create-game-btn"
@@ -99,10 +120,10 @@ export const Home: React.FC<HomeProps> = ({
               sound.playButton();
               onCreateGame();
             }}
-            className="w-full py-3.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 cursor-pointer"
+            className="wr-btn-brass w-full py-3.5 px-4 text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
-            <span>CREATE GAME</span>
+            <span>Open New Operation</span>
           </button>
 
           <button
@@ -112,10 +133,10 @@ export const Home: React.FC<HomeProps> = ({
               sound.playButton();
               onJoinGame();
             }}
-            className="w-full py-3.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-cyan-500 text-slate-100 font-bold text-xs sm:text-sm tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="wr-btn-steel w-full py-3.5 px-4 text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
           >
-            <LogIn className="w-4 h-4 text-cyan-400" />
-            <span>JOIN GAME</span>
+            <LogIn className="w-4 h-4" />
+            <span>Report to Operation</span>
           </button>
 
           <button
@@ -125,16 +146,27 @@ export const Home: React.FC<HomeProps> = ({
               sound.playButton();
               onOpenHowToPlay();
             }}
-            className="w-full py-2.5 px-4 rounded-xl text-slate-400 hover:text-slate-200 text-xs font-semibold tracking-wider uppercase transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+            className="w-full py-2.5 px-4 text-[#a8956c] hover:text-[#efe3c2] text-[11px] font-bold tracking-[0.25em] uppercase transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
-            <span>HOW TO PLAY</span>
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>Field Manual</span>
           </button>
         </div>
 
-        {/* Fleet Preview Badges */}
-        <div className="mt-8 pt-6 border-t border-slate-800/80 flex items-center justify-center gap-3 text-slate-400 text-sm">
-          <span>Create by: Joshua Ebod</span>
+        {/* Footer docket */}
+        <div className="mt-8 pt-4 border-t border-[#4d452c] flex items-center justify-between text-[10px] tracking-[0.2em] uppercase text-[#a8956c]">
+          <span>Battle Room # 7 </span>
+          <span className="text-[#efe3c2]">
+            Filed by: <span className="text-[#efe3c2]"></span>
+            <a
+              className="text-[#efe3c2] hover:text-[#c9a227] transition-colors"
+              href="https://joshuaebodportfolio.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Joshua Ebod
+            </a>
+          </span>
         </div>
       </motion.div>
     </div>

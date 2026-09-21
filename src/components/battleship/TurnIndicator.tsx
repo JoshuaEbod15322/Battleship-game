@@ -23,18 +23,18 @@ export const TurnIndicator: React.FC<TurnIndicatorProps> = ({
         initial={{ scale: 0.96, opacity: 0, y: -4 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 350, damping: 25 }}
-        className={`px-4 py-2.5 rounded-xl border flex items-center justify-between font-mono shadow-lg backdrop-blur-md ${
+        className={`px-4 py-2.5 flex items-center justify-between border ${
           isMyTurn
-            ? "bg-cyan-950/70 border-cyan-400 text-cyan-200 shadow-cyan-950/50"
-            : "bg-slate-900/80 border-slate-700 text-slate-300 shadow-black/40"
+            ? "wr-panel border-[#c9a227]"
+            : "bg-[#14110a] border-[#3a3423]"
         }`}
       >
         <div className="flex items-center gap-2.5">
           <div
-            className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+            className={`w-8 h-8 flex items-center justify-center border ${
               isMyTurn
-                ? "bg-cyan-500/20 border border-cyan-400 text-cyan-400"
-                : "bg-slate-800 border border-slate-700 text-slate-400"
+                ? "bg-[#0d0b06] border-[#c9a227] text-[#e8c84a]"
+                : "bg-[#0d0b06] border-[#3a3423] text-[#a8956c]"
             }`}
           >
             {isMyTurn ? (
@@ -45,29 +45,29 @@ export const TurnIndicator: React.FC<TurnIndicatorProps> = ({
           </div>
           <div>
             <div
-              className={`text-xs sm:text-sm font-bold tracking-wider uppercase flex items-center gap-1.5 ${
-                isMyTurn ? "text-cyan-300" : "text-slate-300"
+              className={`wr-head text-xs sm:text-sm tracking-[0.2em] uppercase ${
+                isMyTurn ? "text-[#e8c84a]" : "text-[#a8956c]"
               }`}
             >
-              <span>{isMyTurn ? "YOUR TURN" : "OPPONENT'S TURN"}</span>
+              <span>{isMyTurn ? "Your guns — fire" : "Rival's guns"}</span>
             </div>
-            <div className="text-[11px] text-slate-400">
+            <div className="text-[11px] text-[#a8956c]">
               {isMyTurn
-                ? "Select a target on Enemy Waters"
-                : `Waiting for ${opponentName}...`}
+                ? "Name a square on the enemy chart"
+                : `Holding while ${opponentName} aims...`}
             </div>
           </div>
         </div>
 
         <div className="text-right">
           <span
-            className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+            className={`inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.2em] border ${
               isMyTurn
-                ? "bg-cyan-400 text-slate-950 animate-pulse"
-                : "bg-slate-800 text-slate-400"
+                ? "bg-[#c9a227] text-[#1d1607] border-[#c9a227] animate-pulse"
+                : "bg-[#0d0b06] text-[#a8956c] border-[#3a3423]"
             }`}
           >
-            {isMyTurn ? "FIRE READY" : "DEFENDING"}
+            {isMyTurn ? "Fire" : "Stand by"}
           </span>
         </div>
       </motion.div>
