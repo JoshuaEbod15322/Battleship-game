@@ -166,9 +166,9 @@ export const Game: React.FC<GameProps> = ({
       </div>
 
       {/* Top Combat Bar */}
-      <header className="sticky top-0 z-30 bg-[#04070a]/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3">
-        <div className="max-w-7xl mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <div className="flex items-center gap-3 justify-self-start min-w-0">
+      <header className="sticky top-0 z-30 bg-[#04070a]/95 backdrop-blur-md border-b border-slate-800/80 px-2 sm:px-4 py-2.5 sm:py-3">
+        <div className="max-w-7xl mx-auto flex sm:grid sm:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 justify-self-start min-w-0 flex-1">
             <button
               id="game-leave-btn"
               onClick={() => {
@@ -183,7 +183,7 @@ export const Game: React.FC<GameProps> = ({
 
             <div className="flex items-center gap-2 min-w-0">
               <Radar className="hidden xs:block w-4 h-4 text-cyan-400 shrink-0 motion-safe:animate-pulse" />
-              <span className="text-sm sm:text-base font-bold tracking-wide text-cyan-300 uppercase truncate">
+              <span className="text-xs sm:text-base font-bold tracking-wide text-cyan-300 uppercase truncate max-w-[10rem] sm:max-w-none">
                 Battleship Combat
               </span>
               <kbd
@@ -203,7 +203,7 @@ export const Game: React.FC<GameProps> = ({
             <span className="font-semibold text-rose-300">{opponentName}</span>
           </div>
 
-          <div className="flex items-center gap-2 justify-self-end">
+          <div className="flex items-center gap-1.5 sm:gap-2 justify-self-end shrink-0">
             <button
               id="combat-how-to-play-btn"
               onClick={() => {
@@ -240,12 +240,14 @@ export const Game: React.FC<GameProps> = ({
         </div>
 
         {/* Mobile callsign row, centered below the main bar */}
-        <div className="sm:hidden max-w-7xl mx-auto mt-1.5 flex items-center justify-center gap-2 text-xs">
-          <span className="font-semibold text-cyan-300">
+        <div className="sm:hidden max-w-7xl mx-auto mt-1.5 flex items-center justify-center gap-2 text-[11px] truncate">
+          <span className="font-semibold text-cyan-300 truncate max-w-[9rem]">
             {localPlayer.name}
           </span>
           <span className="text-slate-600">vs</span>
-          <span className="font-semibold text-rose-300">{opponentName}</span>
+          <span className="font-semibold text-rose-300 truncate max-w-[9rem]">
+            {opponentName}
+          </span>
         </div>
       </header>
 
@@ -449,9 +451,9 @@ export const Game: React.FC<GameProps> = ({
 
               {/* Fleet Status Bar, ship pips make the count legible at a glance */}
               <div
-                className={`max-w-md sm:max-w-2xl mx-auto flex border border-slate-800 bg-slate-900/60 ${PANEL_CLIP}`}
+                className={`max-w-md sm:max-w-2xl mx-auto flex flex-col sm:flex-row border border-slate-800 bg-slate-900/60 `}
               >
-                <div className="flex-1 flex items-center justify-between px-4 py-2.5 gap-2">
+                <div className="flex-1 flex items-center justify-between px-3 sm:px-4 py-2.5 gap-2">
                   <span className="text-[11px] text-slate-500 uppercase tracking-wide">
                     Enemy fleet
                   </span>
@@ -473,8 +475,8 @@ export const Game: React.FC<GameProps> = ({
                     </span>
                   </div>
                 </div>
-                <div className="w-px bg-slate-800" />
-                <div className="flex-1 flex items-center justify-between px-4 py-2.5 gap-2">
+                <div className="h-px w-full sm:h-auto sm:w-px bg-slate-800" />
+                <div className="flex-1 flex items-center justify-between px-3 sm:px-4 py-2.5 gap-2">
                   <span className="text-[11px] text-slate-500 uppercase tracking-wide">
                     Your fleet
                   </span>

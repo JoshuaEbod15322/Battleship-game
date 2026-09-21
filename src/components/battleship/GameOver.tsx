@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { motion } from 'motion/react';
-import confetti from 'canvas-confetti';
-import { Trophy, Skull, RotateCcw, Home } from 'lucide-react';
-import type { PlayerRole } from '../../types/battleship';
-import { sound } from '../../lib/sound';
+import React, { useEffect } from "react";
+import { motion } from "motion/react";
+import confetti from "canvas-confetti";
+import { Trophy, Skull, RotateCcw, Home } from "lucide-react";
+import type { PlayerRole } from "../../types/battleship";
+import { sound } from "../../lib/sound";
 
 interface GameOverProps {
   winner: PlayerRole | null;
@@ -27,7 +27,7 @@ export const GameOver: React.FC<GameOverProps> = ({
           particleCount: 120,
           spread: 70,
           origin: { y: 0.6 },
-          colors: ['#06b6d4', '#38bdf8', '#fbbf24', '#ffffff'],
+          colors: ["#06b6d4", "#38bdf8", "#fbbf24", "#ffffff"],
         });
       } catch {}
     }
@@ -39,17 +39,17 @@ export const GameOver: React.FC<GameOverProps> = ({
         id="game-over-modal"
         initial={{ opacity: 0, scale: 0.85, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
         className={`w-full max-w-md p-8 rounded-3xl border text-center shadow-2xl font-mono overflow-hidden relative ${
           isWinner
-            ? 'bg-slate-900/95 border-amber-500/60 shadow-amber-950/50'
-            : 'bg-slate-900/95 border-rose-600/60 shadow-rose-950/50'
+            ? "bg-slate-900/95 border-amber-500/60 shadow-amber-950/50"
+            : "bg-slate-900/95 border-rose-600/60 shadow-rose-950/50"
         }`}
       >
         {/* Glow ambient header */}
         <div
           className={`absolute -top-24 left-1/2 -translate-x-1/2 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-30 ${
-            isWinner ? 'bg-amber-400' : 'bg-rose-600'
+            isWinner ? "bg-amber-400" : "bg-rose-600"
           }`}
         />
 
@@ -69,20 +69,22 @@ export const GameOver: React.FC<GameOverProps> = ({
         {/* Title */}
         <h2
           className={`text-2xl sm:text-3xl font-extrabold tracking-wider uppercase mb-2 ${
-            isWinner ? 'text-amber-400' : 'text-rose-400'
+            isWinner ? "text-amber-400" : "text-rose-400"
           }`}
         >
-          {isWinner ? '🏆 VICTORY' : '💀 DEFEAT'}
+          {isWinner ? "VICTORY" : " DEFEAT"}
         </h2>
 
         <div className="text-base font-bold text-slate-100 mb-1">
-          {isWinner ? 'Enemy Fleet Destroyed' : 'Your fleet has been destroyed.'}
+          {isWinner
+            ? "Enemy Fleet Destroyed"
+            : "Your fleet has been destroyed."}
         </div>
 
         <p className="text-xs text-slate-400 mb-8 max-w-xs mx-auto">
           {isWinner
-            ? 'You dominated the battlefield and sank every hostile warship.'
-            : 'Hostile forces overwhelmed your naval defenses. Regroup and plan your return.'}
+            ? "You dominated the battlefield and sank every hostile warship."
+            : "Hostile forces overwhelmed your naval defenses. Regroup and plan your return."}
         </p>
 
         {/* Action Buttons */}

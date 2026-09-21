@@ -98,7 +98,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   return (
     <div
       id={`game-board-${isEnemy ? "enemy" : "fleet"}`}
-      className="relative flex flex-col p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md max-w-md w-full mx-auto"
+      className="relative flex flex-col p-2.5 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md max-w-md w-full mx-auto min-w-0"
     >
       {/* Board Header */}
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
@@ -139,8 +139,8 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       {/* Grid with Column & Row Headers */}
       <div className="relative w-full">
         {/* Column Labels (A-J) */}
-        <div className="grid grid-cols-11 text-center font-mono text-[10px] sm:text-xs font-semibold text-slate-400 mb-1">
-          <div className="w-5 sm:w-6" /> {/* spacer for row labels */}
+        <div className="grid grid-cols-11 text-center font-mono text-[9px] sm:text-xs font-semibold text-slate-400 mb-1">
+          <div className="w-4 sm:w-6" /> {/* spacer for row labels */}
           {COLUMN_LABELS.map((col) => (
             <div key={col} className="select-none text-cyan-300/70">
               {col}
@@ -149,14 +149,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         </div>
 
         {/* Rows with labels (1-10) and grid cells */}
-        <div className="space-y-1">
+        <div className="space-y-0.5 sm:space-y-1">
           {ROW_LABELS.map((rowLabel, rIdx) => (
             <div
               key={rowLabel}
-              className="grid grid-cols-11 items-center gap-1"
+              className="grid grid-cols-11 items-center gap-0.5 sm:gap-1"
             >
               {/* Row Label (1-10) */}
-              <div className="w-5 sm:w-6 text-right pr-1 font-mono text-[10px] sm:text-xs font-semibold text-cyan-300/70 select-none">
+              <div className="w-4 sm:w-6 text-right pr-0.5 sm:pr-1 font-mono text-[9px] sm:text-xs font-semibold text-cyan-300/70 select-none">
                 {rowLabel}
               </div>
 

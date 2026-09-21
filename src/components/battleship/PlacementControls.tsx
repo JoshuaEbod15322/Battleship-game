@@ -38,7 +38,7 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
   return (
     <div
       id="placement-controls"
-      className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md max-w-md w-full mx-auto space-y-4 font-mono"
+      className="p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md max-w-md w-full mx-auto space-y-4 font-mono"
     >
       <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
         <div>
@@ -123,7 +123,7 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
       </div>
 
       {/* Action Buttons: Rotate, Randomize, Reset */}
-      <div className="grid grid-cols-3 gap-2 pt-1">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
         <button
           id="rotate-btn"
           type="button"
@@ -169,16 +169,16 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         <button
           id="reset-btn"
           type="button"
+          className={`col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
+            isReady
+              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
+              : "bg-slate-950/80 border-slate-700 hover:border-rose-500 text-slate-300 cursor-pointer"
+          }`}
           disabled={isReady}
           onClick={() => {
             sound.playButton();
             onReset();
           }}
-          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
-            isReady
-              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
-              : "bg-slate-950/80 border-slate-700 hover:border-rose-500 text-slate-300 cursor-pointer"
-          }`}
           title={isReady ? "Fleet locked" : "Clear all placed ships"}
         >
           <RotateCcw className="w-3.5 h-3.5 text-rose-400" />
@@ -222,8 +222,7 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
           </>
         ) : allShipsPlaced ? (
           <>
-            <Check className="w-4 h-4 text-slate-950" />
-            <span>LOCK IN FLEET &amp; BATTLE ▶️</span>
+            <span>LOCK IN FLEET &amp; BATTLE</span>
           </>
         ) : (
           <>
