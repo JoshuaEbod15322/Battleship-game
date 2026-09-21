@@ -1,9 +1,15 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { Anchor, ShieldAlert, PlusCircle, LogIn, HelpCircle, Database, Radar } from 'lucide-react';
-import { sound } from '../lib/sound';
-import { SoundToggle } from '../components/ui/SoundToggle';
-import { isSupabaseConfigured } from '../lib/supabase';
+import React from "react";
+import { motion } from "motion/react";
+import {
+  Anchor,
+  ShieldAlert,
+  PlusCircle,
+  LogIn,
+  HelpCircle,
+  Radar,
+} from "lucide-react";
+import { sound } from "../lib/sound";
+import { SoundToggle } from "../components/ui/SoundToggle";
 
 interface HomeProps {
   onCreateGame: () => void;
@@ -17,11 +23,8 @@ export const Home: React.FC<HomeProps> = ({
   onCreateGame,
   onJoinGame,
   onOpenHowToPlay,
-  onOpenSupabaseConfig,
   invitedRoomCode,
 }) => {
-  const supabaseReady = isSupabaseConfigured();
-
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden font-sans">
       {/* Background Naval Radar Grid Effect */}
@@ -30,35 +33,16 @@ export const Home: React.FC<HomeProps> = ({
 
       {/* Top Controls Bar */}
       <div className="absolute top-4 left-4 right-4 flex items-center justify-between max-w-5xl mx-auto z-20">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-            <Anchor className="w-4 h-4" />
+        <div className="flex items-center gap-1">
+          <div className="w-8 h-8 flex items-center justify-center text-cyan-400">
+            <Anchor className="w-6 h-6" />
           </div>
-          <span className="font-mono text-xs tracking-wider text-cyan-400/80 font-bold hidden sm:inline">
+          <span className="font-mono text-lg tracking-wider text-cyan-400/80 font-bold hidden sm:inline">
             USN TACTICAL GRID
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            id="supabase-settings-btn"
-            onClick={() => {
-              sound.playButton();
-              onOpenSupabaseConfig();
-            }}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium border transition-colors cursor-pointer ${
-              supabaseReady
-                ? 'bg-emerald-950/60 border-emerald-700/60 text-emerald-300 hover:bg-emerald-900/60'
-                : 'bg-slate-900/80 border-slate-700 text-slate-300 hover:text-cyan-300'
-            }`}
-            title="Configure Supabase Realtime credentials"
-          >
-            <Database className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="hidden sm:inline">
-              {supabaseReady ? 'SUPABASE ACTIVE' : 'REALTIME SETUP'}
-            </span>
-          </button>
-
           <SoundToggle />
         </div>
       </div>
@@ -96,8 +80,11 @@ export const Home: React.FC<HomeProps> = ({
             <div>
               <div className="font-bold">Incoming Combat Invite!</div>
               <div className="text-[11px] text-cyan-300/80 mt-0.5">
-                You've been invited to join match{' '}
-                <strong className="text-white tracking-wider">{invitedRoomCode}</strong>.
+                You've been invited to join match{" "}
+                <strong className="text-white tracking-wider">
+                  {invitedRoomCode}
+                </strong>
+                .
               </div>
             </div>
           </div>
@@ -147,11 +134,7 @@ export const Home: React.FC<HomeProps> = ({
 
         {/* Fleet Preview Badges */}
         <div className="mt-8 pt-6 border-t border-slate-800/80 flex items-center justify-center gap-3 text-slate-400 text-sm">
-          <span title="Carrier (5)">🚢</span>
-          <span title="Battleship (4)">🛳️</span>
-          <span title="Cruiser (3)">🚤</span>
-          <span title="Submarine (3)">🚢</span>
-          <span title="Destroyer (2)">⛴️</span>
+          <span>Create by: Joshua Ebod</span>
         </div>
       </motion.div>
     </div>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { BoardCell } from './BoardCell';
-import { BOARD_SIZE, COLUMN_LABELS, ROW_LABELS } from '../../config/ships';
+import React, { useState } from "react";
+import { BoardCell } from "./BoardCell";
+import { BOARD_SIZE, COLUMN_LABELS, ROW_LABELS } from "../../config/ships";
 import type {
   AttackRecord,
   Coordinate,
@@ -8,9 +8,9 @@ import type {
   PlacedShip,
   ShipDefinition,
   ShipType,
-} from '../../types/battleship';
-import { canPlaceShip, getShipCoordinates } from '../../lib/gameLogic';
-import { Shield, Crosshair, Radar } from 'lucide-react';
+} from "../../types/battleship";
+import { canPlaceShip, getShipCoordinates } from "../../lib/gameLogic";
+import { Shield, Crosshair } from "lucide-react";
 
 interface GameBoardProps {
   title: string;
@@ -44,7 +44,7 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   onAttack,
   isPlacementMode = false,
   selectedShipDef = null,
-  orientation = 'horizontal',
+  orientation = "horizontal",
   onPlaceShip,
 }) => {
   const [hoverCoord, setHoverCoord] = useState<Coordinate | null>(null);
@@ -54,24 +54,33 @@ export const GameBoard: React.FC<GameBoardProps> = ({
   let isPlacementValid = false;
 
   if (isPlacementMode && selectedShipDef && hoverCoord) {
-    placementPreviewCoords = getShipCoordinates(hoverCoord, orientation, selectedShipDef.size);
+    placementPreviewCoords = getShipCoordinates(
+      hoverCoord,
+      orientation,
+      selectedShipDef.size,
+    );
     isPlacementValid = canPlaceShip(
       selectedShipDef,
       hoverCoord,
       orientation,
       placedShips,
       BOARD_SIZE,
-      selectedShipDef.id
+      selectedShipDef.id,
     );
   }
 
   // Helper to find ship on a coordinate
   const getShipAtCoord = (row: number, col: number): PlacedShip | undefined => {
-    return placedShips.find((s) => s.coordinates.some((c) => c.row === row && c.col === col));
+    return placedShips.find((s) =>
+      s.coordinates.some((c) => c.row === row && c.col === col),
+    );
   };
 
   // Helper to find attack on a coordinate
-  const getAttackAtCoord = (row: number, col: number): AttackRecord | undefined => {
+  const getAttackAtCoord = (
+    row: number,
+    col: number,
+  ): AttackRecord | undefined => {
     return attacks.find((a) => a.row === row && a.col === col);
   };
 
@@ -81,12 +90,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       const ship = getShipAtCoord(row, col);
       return Boolean(ship?.isSunk);
     }
-    return sunkShips.some((s) => s.coordinates.some((c) => c.row === row && c.col === col));
+    return sunkShips.some((s) =>
+      s.coordinates.some((c) => c.row === row && c.col === col),
+    );
   };
 
   return (
     <div
-      id={`game-board-${isEnemy ? 'enemy' : 'fleet'}`}
+      id={`game-board-${isEnemy ? "enemy" : "fleet"}`}
       className="relative flex flex-col p-3 sm:p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md max-w-md w-full mx-auto"
     >
       {/* Board Header */}
@@ -103,25 +114,24 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           )}
           <div>
             <h3
-              className={`font-mono text-xs sm:text-sm font-bold tracking-wider uppercase ${
-                isEnemy ? 'text-rose-400' : 'text-cyan-400'
+              className={`font-mono text-xs sm:text-sm font-semibold tracking-wider uppercase ${
+                isEnemy ? "text-rose-400" : "text-cyan-400"
               }`}
             >
               {title}
             </h3>
-            <p className="text-[10px] text-slate-400 font-mono">
+            {/* <p className="text-[10px] text-slate-400 font-mono">
               {isEnemy
                 ? canAttack
-                  ? '🎯 Target Coordinates Armed'
-                  : '⏳ Radar Surveillance Active'
+                  ? "Target Coordinates Armed"
+                  : "Radar Surveillance Active"
                 : `Active Fleet: ${placedShips.filter((s) => !s.isSunk).length} / 5 Vessels`}
-            </p>
+            </p> */}
           </div>
         </div>
 
         {/* Small naval status ping indicator */}
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-slate-950/60 border border-slate-800 text-[10px] font-mono text-slate-400">
-          <Radar className={`w-3 h-3 ${isEnemy ? 'text-rose-400' : 'text-cyan-400'} animate-spin`} />
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-slate-950/60 border border-slate-800 text-[12px] font-mono text-slate-400">
           <span>10×10</span>
         </div>
       </div>
@@ -141,7 +151,10 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         {/* Rows with labels (1-10) and grid cells */}
         <div className="space-y-1">
           {ROW_LABELS.map((rowLabel, rIdx) => (
-            <div key={rowLabel} className="grid grid-cols-11 items-center gap-1">
+            <div
+              key={rowLabel}
+              className="grid grid-cols-11 items-center gap-1"
+            >
               {/* Row Label (1-10) */}
               <div className="w-5 sm:w-6 text-right pr-1 font-mono text-[10px] sm:text-xs font-semibold text-cyan-300/70 select-none">
                 {rowLabel}
@@ -151,13 +164,13 @@ export const GameBoard: React.FC<GameBoardProps> = ({
               {COLUMN_LABELS.map((_, cIdx) => {
                 const ship = !isEnemy ? getShipAtCoord(rIdx, cIdx) : undefined;
                 const attack = getAttackAtCoord(rIdx, cIdx);
-                const isHit = attack?.result === 'hit';
-                const isMiss = attack?.result === 'miss';
+                const isHit = attack?.result === "hit";
+                const isMiss = attack?.result === "miss";
                 const isSunk = isSunkAtCoord(rIdx, cIdx);
 
                 // Check if this cell is part of placement preview
                 const isPreview = placementPreviewCoords.some(
-                  (c) => c.row === rIdx && c.col === cIdx
+                  (c) => c.row === rIdx && c.col === cIdx,
                 );
 
                 return (

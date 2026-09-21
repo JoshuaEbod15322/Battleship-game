@@ -1,8 +1,12 @@
-import React from 'react';
-import { RotateCw, Dices, RotateCcw, Check, AlertCircle } from 'lucide-react';
-import type { Orientation, PlacedShip, ShipDefinition } from '../../types/battleship';
-import { SHIPS } from '../../config/ships';
-import { sound } from '../../lib/sound';
+import React from "react";
+import { RotateCw, Dices, RotateCcw, Check, AlertCircle } from "lucide-react";
+import type {
+  Orientation,
+  PlacedShip,
+  ShipDefinition,
+} from "../../types/battleship";
+import { SHIPS } from "../../config/ships";
+import { sound } from "../../lib/sound";
 
 interface PlacementControlsProps {
   placedShips: PlacedShip[];
@@ -43,12 +47,13 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
           </h3>
           <p className="text-[11px] text-slate-400">
             {allShipsPlaced
-              ? 'All 5 ships deployed. Confirm tactical ready.'
-              : 'Select a ship, choose sector on grid.'}
+              ? "All 5 ships deployed. Confirm tactical ready."
+              : "Select a ship, choose sector on grid."}
           </p>
         </div>
         <div className="text-xs font-bold text-slate-300">
-          <span className="text-cyan-400">{placedShips.length}</span> / {SHIPS.length}
+          <span className="text-cyan-400">{placedShips.length}</span> /{" "}
+          {SHIPS.length}
         </div>
       </div>
 
@@ -69,10 +74,10 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
               }}
               className={`w-full flex items-center justify-between p-2.5 rounded-xl border transition-all cursor-pointer ${
                 isSelected
-                  ? 'bg-cyan-950/80 border-cyan-400 shadow-md shadow-cyan-900/30'
+                  ? "bg-cyan-950/80 border-cyan-400 shadow-md shadow-cyan-900/30"
                   : isPlaced
-                  ? 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700'
-                  : 'bg-slate-900/60 border-cyan-900/40 text-slate-200 hover:border-cyan-600/60'
+                    ? "bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700"
+                    : "bg-slate-900/60 border-cyan-900/40 text-slate-200 hover:border-cyan-600/60"
               }`}
             >
               <div className="flex items-center gap-2.5">
@@ -80,8 +85,12 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
                   {ship.emoji}
                 </span>
                 <div className="text-left">
-                  <div className="text-xs font-bold flex items-center gap-1.5">
-                    <span className={isSelected ? 'text-cyan-300' : 'text-slate-200'}>
+                  <div className="text-md font-semibold flex items-center gap-1.5">
+                    <span
+                      className={
+                        isSelected ? "text-cyan-300" : "text-slate-200"
+                      }
+                    >
                       {ship.name}
                     </span>
                     {isPlaced && (
@@ -90,7 +99,6 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
                       </span>
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-400">{ship.size} Grid Sectors</div>
                 </div>
               </div>
 
@@ -101,10 +109,10 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
                     key={i}
                     className={`w-2.5 h-3 rounded-xs border ${
                       isPlaced
-                        ? 'bg-cyan-500/60 border-cyan-400'
+                        ? "bg-cyan-500/60 border-cyan-400"
                         : isSelected
-                        ? 'bg-cyan-400 border-cyan-300 animate-pulse'
-                        : 'bg-slate-800 border-slate-700'
+                          ? "bg-cyan-400 border-cyan-300 animate-pulse"
+                          : "bg-slate-800 border-slate-700"
                     }`}
                   />
                 ))}
@@ -119,26 +127,40 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         <button
           id="rotate-btn"
           type="button"
+          disabled={isReady}
           onClick={() => {
             sound.playButton();
             onRotate();
           }}
-          className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-slate-950/80 border border-slate-700 hover:border-cyan-500 text-slate-200 text-xs font-bold transition-colors cursor-pointer"
-          title="Rotate ship placement orientation (or press R)"
+          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
+            isReady
+              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
+              : "bg-slate-950/80 border-slate-700 hover:border-cyan-500 text-slate-200 cursor-pointer"
+          }`}
+          title={
+            isReady
+              ? "Fleet locked"
+              : `Rotate ship placement orientation (currently ${orientation}) or press R`
+          }
         >
           <RotateCw className="w-3.5 h-3.5 text-cyan-400" />
-          <span>{orientation === 'horizontal' ? 'HORIZ 🔄' : 'VERT 🔄'}</span>
+          <span>ROTATE</span>
         </button>
 
         <button
           id="randomize-btn"
           type="button"
+          disabled={isReady}
           onClick={() => {
             sound.playButton();
             onRandomize();
           }}
-          className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-slate-950/80 border border-slate-700 hover:border-cyan-500 text-slate-200 text-xs font-bold transition-colors cursor-pointer"
-          title="Randomize fleet placement"
+          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
+            isReady
+              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
+              : "bg-slate-950/80 border-slate-700 hover:border-cyan-500 text-slate-200 cursor-pointer"
+          }`}
+          title={isReady ? "Fleet locked" : "Randomize fleet placement"}
         >
           <Dices className="w-3.5 h-3.5 text-amber-400" />
           <span>RANDOM 🎲</span>
@@ -147,12 +169,17 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         <button
           id="reset-btn"
           type="button"
+          disabled={isReady}
           onClick={() => {
             sound.playButton();
             onReset();
           }}
-          className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl bg-slate-950/80 border border-slate-700 hover:border-rose-500 text-slate-300 text-xs font-bold transition-colors cursor-pointer"
-          title="Clear all placed ships"
+          className={`flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border text-xs font-bold transition-colors ${
+            isReady
+              ? "bg-slate-900/50 border-slate-800 text-slate-600 cursor-not-allowed"
+              : "bg-slate-950/80 border-slate-700 hover:border-rose-500 text-slate-300 cursor-pointer"
+          }`}
+          title={isReady ? "Fleet locked" : "Clear all placed ships"}
         >
           <RotateCcw className="w-3.5 h-3.5 text-rose-400" />
           <span>RESET</span>
@@ -164,10 +191,10 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         <span>Opponent Status:</span>
         <span
           className={`font-bold flex items-center gap-1 ${
-            opponentReady ? 'text-emerald-400' : 'text-amber-400'
+            opponentReady ? "text-emerald-400" : "text-amber-400"
           }`}
         >
-          {opponentReady ? '🟢 Ready for Combat' : '⏳ Placing Ships...'}
+          {opponentReady ? "🟢 Ready for Combat" : "⏳ Placing Ships..."}
         </span>
       </div>
 
@@ -182,10 +209,10 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         }}
         className={`w-full py-3 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer ${
           isReady
-            ? 'bg-emerald-950 border border-emerald-600 text-emerald-400 cursor-default'
+            ? "bg-emerald-950 border border-emerald-600 text-emerald-400 cursor-default"
             : allShipsPlaced
-            ? 'bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/25 cursor-pointer animate-pulse'
-            : 'bg-slate-800/60 text-slate-500 border border-slate-800 cursor-not-allowed'
+              ? "bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/25 cursor-pointer animate-pulse"
+              : "bg-slate-800/60 text-slate-500 border border-slate-800 cursor-not-allowed"
         }`}
       >
         {isReady ? (

@@ -1,7 +1,15 @@
-import { motion, AnimatePresence } from 'motion/react';
-import { X, HelpCircle, Shield, Target, Waves, Flame, Award } from 'lucide-react';
-import { SHIPS } from '../../config/ships';
-import { sound } from '../../lib/sound';
+import { motion, AnimatePresence } from "motion/react";
+import {
+  X,
+  HelpCircle,
+  // Shield,
+  // Target,
+  // Waves,
+  // Flame,
+  // Award,
+} from "lucide-react";
+import { SHIPS } from "../../config/ships";
+import { sound } from "../../lib/sound";
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -24,14 +32,16 @@ export function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-cyan-800/40 bg-slate-950/60">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                  <HelpCircle className="w-4 h-4" />
+                <div className="w-8 h-8  flex items-center justify-center text-cyan-400">
+                  <HelpCircle className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="font-mono text-sm tracking-wider uppercase text-cyan-400 font-bold">
                     Naval Protocol
                   </h3>
-                  <p className="text-xs text-slate-400 font-mono">Battleship Combat Instructions</p>
+                  <p className="text-xs text-slate-400 font-mono">
+                    Battleship Combat Instructions
+                  </p>
                 </div>
               </div>
               <button
@@ -56,28 +66,54 @@ export function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
                 </h4>
                 <ol className="space-y-2.5 text-xs font-mono">
                   <li className="flex items-start gap-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-700/40">
-                    <Shield className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-100">1. Place your fleet:</strong> Position your 5 naval vessels horizontally or vertically. Ships cannot overlap or cross grid boundaries.</span>
+                    <span>
+                      <strong className="text-slate-100">
+                        1. Place your fleet:
+                      </strong>{" "}
+                      Position your 5 naval vessels horizontally or vertically.
+                      Ships cannot overlap or cross grid boundaries.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-700/40">
-                    <Target className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-100">2. Wait for opponent:</strong> Once both commanders lock in fleet placement, combat coordinates unlock.</span>
+                    <span>
+                      <strong className="text-slate-100">
+                        2. Wait for opponent:
+                      </strong>{" "}
+                      Once both commanders lock in fleet placement, combat
+                      coordinates unlock.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-700/40">
-                    <Target className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-100">3. Take turns attacking:</strong> Call strikes on enemy grid sectors (A1 to J10).</span>
+                    <span>
+                      <strong className="text-slate-100">
+                        3. Take turns attacking:
+                      </strong>{" "}
+                      Call strikes on enemy grid sectors (A1 to J10).
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-700/40">
-                    <Flame className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-100">4. 💥 or 🔥 means HIT:</strong> A strike successfully damaged an enemy warship.</span>
+                    <span>
+                      <strong className="text-slate-100">
+                        4. 💥 or 🔥 means HIT:
+                      </strong>{" "}
+                      A strike successfully damaged an enemy warship.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-700/40">
-                    <Waves className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-100">5. 💦 means MISS:</strong> The strike hit open water.</span>
+                    <span>
+                      <strong className="text-slate-100">
+                        5. 💦 means MISS:
+                      </strong>{" "}
+                      The strike hit open water.
+                    </span>
                   </li>
                   <li className="flex items-start gap-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-700/40">
-                    <Award className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span><strong className="text-slate-100">6. Complete annihilation:</strong> Sink every enemy ship across the board to secure victory!</span>
+                    <span>
+                      <strong className="text-slate-100">
+                        6. Complete annihilation:
+                      </strong>{" "}
+                      Sink every enemy ship across the board to secure victory!
+                    </span>
                   </li>
                 </ol>
               </div>
@@ -94,14 +130,20 @@ export function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
                       className="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/60 border border-slate-700/60"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-xl" role="img" aria-label={ship.name}>
+                        <span
+                          className="text-xl"
+                          role="img"
+                          aria-label={ship.name}
+                        >
                           {ship.emoji}
                         </span>
                         <div>
                           <div className="font-mono text-xs text-slate-200 font-semibold">
                             {ship.name}
                           </div>
-                          <div className="text-[10px] text-slate-400">{ship.size} Grid Sectors</div>
+                          <div className="text-[10px] text-slate-400">
+                            {ship.size} Grid Sectors
+                          </div>
                         </div>
                       </div>
                       <div className="flex gap-1">

@@ -29,7 +29,13 @@ export const JoinGame: React.FC<JoinGameProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     sound.playButton();
+    const cleanName = playerName.trim();
     const clean = code.trim().toUpperCase();
+
+    if (!cleanName) {
+      setValidationError("Please enter your commander name to join.");
+      return;
+    }
 
     if (!clean) {
       setValidationError("Please enter a room code to join.");
@@ -100,7 +106,7 @@ export const JoinGame: React.FC<JoinGameProps> = ({
             maxLength={15}
             value={playerName}
             onChange={(e) => onPlayerNameChange(e.target.value)}
-            placeholder="e.g. Captain Drake"
+            placeholder="Your call sign"
             className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors"
           />
         </div>

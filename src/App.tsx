@@ -10,14 +10,6 @@ import { generateRoomCode } from "./lib/roomCode";
 import { createRoom, getSupabaseClient, joinRoom } from "./lib/supabase";
 import type { GamePhase, Player, Room } from "./types/battleship";
 
-const DEFAULT_RANKS = [
-  "Admiral",
-  "Captain",
-  "Commander",
-  "Commodore",
-  "Lieutenant",
-];
-
 export default function App() {
   const [phase, setPhase] = useState<GamePhase>("home");
   const [roomCode, setRoomCode] = useState<string>("");
@@ -33,9 +25,7 @@ export default function App() {
       const saved = localStorage.getItem("battleship_player_name");
       if (saved) return saved;
     }
-    const rank =
-      DEFAULT_RANKS[Math.floor(Math.random() * DEFAULT_RANKS.length)];
-    return `${rank} Joshua`;
+    return "";
   });
 
   const [playerId] = useState<string>(() => {
@@ -186,7 +176,7 @@ export default function App() {
 
     const hostPlayer: Player = {
       id: playerId,
-      name: playerName || "Admiral Joshua",
+      name: playerName,
       role: "player1",
       isReady: false,
       isConnected: true,
@@ -228,7 +218,7 @@ export default function App() {
 
     const guestPlayer: Player = {
       id: playerId,
-      name: playerName || "Captain Drake",
+      name: playerName,
       role: "player2",
       isReady: false,
       isConnected: true,
@@ -332,6 +322,11 @@ export default function App() {
           initialOpponentConnected={Boolean(
             activeRoom?.player1 && activeRoom.player2,
           )}
+          initialOpponentName={
+            localPlayer.role === "player1"
+              ? activeRoom?.player2?.name
+              : activeRoom?.player1?.name
+          }
           onReturnHome={handleReturnHome}
           onOpenHowToPlay={() => setHowToPlayOpen(true)}
         />

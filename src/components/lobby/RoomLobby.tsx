@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import type { Player, Room } from '../../types/battleship';
-import { Swords, Wifi, ArrowRight } from 'lucide-react';
-import { sound } from '../../lib/sound';
+import React from "react";
+import { motion } from "motion/react";
+import type { Player, Room } from "../../types/battleship";
+import { Swords, Wifi, ArrowRight } from "lucide-react";
+import { sound } from "../../lib/sound";
 
 interface RoomLobbyProps {
   room: Room;
@@ -39,8 +39,8 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
         </h2>
         <p className="text-xs text-slate-400 mt-1">
           {bothPresent
-            ? 'Both flagships linked. Proceeding to fleet positioning.'
-            : 'Awaiting challenger link on tactical frequency...'}
+            ? "Both flagships linked. Proceeding to fleet positioning."
+            : "Awaiting challenger link on tactical frequency..."}
         </p>
       </div>
 
@@ -52,11 +52,13 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
             PLAYER 1 (HOST)
           </div>
           <div className="text-base font-bold text-slate-100 truncate">
-            {p1 ? `${p1.name}${localPlayer.id === p1.id ? ' (You)' : ''}` : 'Waiting for Host...'}
+            {p1
+              ? `${p1.name}${localPlayer.id === p1.id ? " (You)" : ""}`
+              : "Waiting for Host..."}
           </div>
           <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-400">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>🟢 Connected</span>
+            <span>Connected</span>
           </div>
         </div>
 
@@ -69,26 +71,28 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
         <div
           className={`p-4 rounded-2xl border relative overflow-hidden ${
             p2 && opponentConnected
-              ? 'bg-slate-950/80 border-cyan-500/40'
-              : 'bg-slate-950/40 border-slate-800/80'
+              ? "bg-slate-950/80 border-cyan-500/40"
+              : "bg-slate-950/40 border-slate-800/80"
           }`}
         >
           <div className="text-[10px] text-cyan-400 uppercase tracking-widest mb-1 font-bold">
             PLAYER 2 (CHALLENGER)
           </div>
           <div className="text-base font-bold text-slate-100 truncate">
-            {p2 ? `${p2.name}${localPlayer.id === p2.id ? ' (You)' : ''}` : 'Waiting for Opponent...'}
+            {p2
+              ? `${p2.name}${localPlayer.id === p2.id ? " (You)" : ""}`
+              : "Waiting for Opponent..."}
           </div>
           <div className="mt-3 flex items-center gap-1.5 text-xs">
             {p2 && opponentConnected ? (
               <span className="text-emerald-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span>🟢 Connected</span>
+                <span>Connected</span>
               </span>
             ) : (
               <span className="text-amber-400 flex items-center gap-1.5">
                 <Wifi className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                <span>⏳ Awaiting Signal</span>
+                <span>Awaiting Signal</span>
               </span>
             )}
           </div>

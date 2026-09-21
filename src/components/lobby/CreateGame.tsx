@@ -97,7 +97,7 @@ export const CreateGame: React.FC<CreateGameProps> = ({
           maxLength={15}
           value={playerName}
           onChange={(e) => onPlayerNameChange(e.target.value)}
-          placeholder="e.g. Admiral Joshua"
+          placeholder="Your call sign"
           className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-100 text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors"
         />
       </div>
@@ -163,9 +163,7 @@ export const CreateGame: React.FC<CreateGameProps> = ({
         <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-300 mb-1">
           <Users className="w-4 h-4 text-cyan-400" />
           <span>
-            {opponentConnected
-              ? "🟢 Opponent Joined!"
-              : "Waiting for opponent..."}
+            {opponentConnected ? "Opponent Joined!" : "Waiting for opponent..."}
           </span>
         </div>
         <div className="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
