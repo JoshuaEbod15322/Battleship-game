@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { ArrowLeft, LogIn, AlertTriangle, User, Hash } from 'lucide-react';
-import { isValidRoomCode } from '../../lib/roomCode';
-import { sound } from '../../lib/sound';
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import { ArrowLeft, LogIn, AlertTriangle, User, Hash } from "lucide-react";
+import { isValidRoomCode } from "../../lib/roomCode";
+import { sound } from "../../lib/sound";
 
 interface JoinGameProps {
   initialRoomCode?: string;
   playerName: string;
   onPlayerNameChange: (name: string) => void;
-  onJoin: (roomCode: string) => void;
+  onJoin: (roomCode: string) => void | Promise<void>;
   onBack: () => void;
   error?: string | null;
   isJoining?: boolean;
 }
 
 export const JoinGame: React.FC<JoinGameProps> = ({
-  initialRoomCode = '',
+  initialRoomCode = "",
   playerName,
   onPlayerNameChange,
   onJoin,
@@ -32,12 +32,14 @@ export const JoinGame: React.FC<JoinGameProps> = ({
     const clean = code.trim().toUpperCase();
 
     if (!clean) {
-      setValidationError('Please enter a room code to join.');
+      setValidationError("Please enter a room code to join.");
       return;
     }
 
     if (!isValidRoomCode(clean)) {
-      setValidationError('Invalid code format. Codes are 6 alphanumeric characters (e.g. A7K9P2).');
+      setValidationError(
+        "Invalid code format. Codes are 6 alphanumeric characters (e.g. A7K9P2).",
+      );
       return;
     }
 
@@ -142,7 +144,7 @@ export const JoinGame: React.FC<JoinGameProps> = ({
           className="w-full py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs sm:text-sm tracking-wider uppercase transition-all shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2 cursor-pointer mt-4"
         >
           <LogIn className="w-4 h-4" />
-          <span>{isJoining ? 'CONNECTING...' : 'JOIN GAME'}</span>
+          <span>{isJoining ? "CONNECTING..." : "JOIN GAME"}</span>
         </button>
       </form>
     </motion.div>

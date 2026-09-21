@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import type {
   Coordinate,
   Orientation,
   Player,
   ShipDefinition,
-} from '../types/battleship';
-import { SHIPS } from '../config/ships';
-import { placeShip, randomizeFleet, rotateOrientation } from '../lib/gameLogic';
-import { GameBoard } from '../components/battleship/GameBoard';
-import { PlacementControls } from '../components/battleship/PlacementControls';
-import { TurnIndicator } from '../components/battleship/TurnIndicator';
-import { AttackResult } from '../components/battleship/AttackResult';
-import { GameOver } from '../components/battleship/GameOver';
-import { SoundToggle } from '../components/ui/SoundToggle';
-import { useMultiplayer } from '../hooks/useMultiplayer';
+} from "../types/battleship";
+import { SHIPS } from "../config/ships";
+import { placeShip, randomizeFleet, rotateOrientation } from "../lib/gameLogic";
+import { GameBoard } from "../components/battleship/GameBoard";
+import { PlacementControls } from "../components/battleship/PlacementControls";
+import { TurnIndicator } from "../components/battleship/TurnIndicator";
+import { AttackResult } from "../components/battleship/AttackResult";
+import { GameOver } from "../components/battleship/GameOver";
+import { SoundToggle } from "../components/ui/SoundToggle";
+import { useMultiplayer } from "../hooks/useMultiplayer";
 import {
   WifiOff,
   Wifi,
@@ -23,12 +23,13 @@ import {
   Shield,
   Crosshair,
   HelpCircle,
-} from 'lucide-react';
-import { sound } from '../lib/sound';
+} from "lucide-react";
+import { sound } from "../lib/sound";
 
 interface GameProps {
   roomCode: string;
   localPlayer: Player;
+  initialOpponentConnected?: boolean;
   onReturnHome: () => void;
   onOpenHowToPlay: () => void;
 }
@@ -36,12 +37,14 @@ interface GameProps {
 export const Game: React.FC<GameProps> = ({
   roomCode,
   localPlayer,
+  initialOpponentConnected = false,
   onReturnHome,
   onOpenHowToPlay,
 }) => {
   const {
     room,
     connectionStatus,
+    opponentConnected,
     opponentLeft,
     myFleet,
     setMyFleet,
@@ -55,18 +58,30 @@ export const Game: React.FC<GameProps> = ({
     launchAttack,
     requestRematch,
     leaveRoom,
-  } = useMultiplayer(roomCode, localPlayer);
+  } = useMultiplayer(
+    roomCode,
+    localPlayer,
+    undefined,
+    initialOpponentConnected,
+  );
 
   // Placement local state
-  const [selectedShipDef, setSelectedShipDef] = useState<ShipDefinition | null>(SHIPS[0]);
-  const [orientation, setOrientation] = useState<Orientation>('horizontal');
+  const [selectedShipDef, setSelectedShipDef] = useState<ShipDefinition | null>(
+    SHIPS[0],
+  );
+  const [orientation, setOrientation] = useState<Orientation>("horizontal");
 
   // Mobile active board tab ('fleet' | 'enemy')
-  const [mobileActiveTab, setMobileActiveTab] = useState<'fleet' | 'enemy'>('enemy');
+  const [mobileActiveTab, setMobileActiveTab] = useState<"fleet" | "enemy">(
+    "enemy",
+  );
 
-  const isPlacementPhase = room?.status === 'placement' || !myFleetReady || !opponentFleetReady;
-  const isBattlePhase = room?.status === 'battle' && myFleetReady && opponentFleetReady;
-  const isFinishedPhase = room?.status === 'finished';
+  const isPlacementPhase =
+    room?.status === "placement" ||
+    (opponentConnected && (!myFleetReady || !opponentFleetReady));
+  const isBattlePhase =
+    room?.status === "battle" && myFleetReady && opponentFleetReady;
+  const isFinishedPhase = room?.status === "finished";
 
   const isMyTurn = room?.currentTurn === localPlayer.role;
 
@@ -80,7 +95,9 @@ export const Game: React.FC<GameProps> = ({
       setMyFleet(newFleet);
 
       // Select next unplaced ship automatically
-      const nextUnplaced = SHIPS.find((s) => !newFleet.some((placed) => placed.id === s.id));
+      const nextUnplaced = SHIPS.find(
+        (s) => !newFleet.some((placed) => placed.id === s.id),
+      );
       if (nextUnplaced) {
         setSelectedShipDef(nextUnplaced);
       }
@@ -110,18 +127,18 @@ export const Game: React.FC<GameProps> = ({
   // Keyboard shortcut 'R' to rotate
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'r' || e.key === 'R') {
+      if (e.key === "r" || e.key === "R") {
         handleRotate();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const opponentName =
-    localPlayer.role === 'player1'
-      ? room?.player2?.name || 'Challenger'
-      : room?.player1?.name || 'Host Admiral';
+    localPlayer.role === "player1"
+      ? room?.player2?.name || "Challenger"
+      : room?.player1?.name || "Host Admiral";
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-mono relative overflow-x-hidden selection:bg-cyan-500 selection:text-black">
@@ -137,7 +154,11 @@ export const Game: React.FC<GameProps> = ({
               id="game-leave-btn"
               onClick={() => {
                 sound.playButton();
-                if (window.confirm('Are you sure you want to withdraw from this operation?')) {
+                if (
+                  window.confirm(
+                    "Are you sure you want to withdraw from this operation?",
+                  )
+                ) {
                   leaveRoom();
                   onReturnHome();
                 }
@@ -157,9 +178,14 @@ export const Game: React.FC<GameProps> = ({
                 </span>
               </div>
               <div className="text-[11px] text-slate-400 flex items-center gap-2">
-                <span>Callsign: <strong className="text-slate-200">{localPlayer.name}</strong></span>
+                <span>
+                  Callsign:{" "}
+                  <strong className="text-slate-200">{localPlayer.name}</strong>
+                </span>
                 <span>•</span>
-                <span>VS <strong className="text-slate-200">{opponentName}</strong></span>
+                <span>
+                  VS <strong className="text-slate-200">{opponentName}</strong>
+                </span>
               </div>
             </div>
           </div>
@@ -168,12 +194,12 @@ export const Game: React.FC<GameProps> = ({
             {/* Connection status tag */}
             <div
               className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono border ${
-                connectionStatus === 'connected'
-                  ? 'bg-emerald-950/60 border-emerald-800/60 text-emerald-400'
-                  : 'bg-rose-950/60 border-rose-800/60 text-rose-400 animate-pulse'
+                connectionStatus === "connected"
+                  ? "bg-emerald-950/60 border-emerald-800/60 text-emerald-400"
+                  : "bg-rose-950/60 border-rose-800/60 text-rose-400 animate-pulse"
               }`}
             >
-              {connectionStatus === 'connected' ? (
+              {connectionStatus === "connected" ? (
                 <>
                   <Wifi className="w-3.5 h-3.5 text-emerald-400" />
                   <span>CONNECTED</span>
@@ -214,7 +240,8 @@ export const Game: React.FC<GameProps> = ({
           >
             <AlertOctagon className="w-4 h-4 text-rose-400 shrink-0" />
             <div>
-              <strong>OPPONENT LEFT:</strong> The opponent has disconnected from the match.
+              <strong>OPPONENT LEFT:</strong> The opponent has disconnected from
+              the match.
             </div>
             <button
               id="opponent-left-return-home-btn"
@@ -234,6 +261,17 @@ export const Game: React.FC<GameProps> = ({
       {/* Main Game Stage */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col justify-center">
         {/* PHASE 1: SHIP PLACEMENT */}
+        {!opponentConnected && room?.status !== "placement" && (
+          <div className="max-w-md mx-auto p-6 rounded-2xl bg-slate-900/90 border border-amber-500/30 text-center">
+            <h2 className="text-lg font-bold text-amber-300 uppercase tracking-wider">
+              Waiting for opponent
+            </h2>
+            <p className="text-xs text-slate-400 mt-2">
+              Fleet placement will unlock when both commanders join this room.
+            </p>
+          </div>
+        )}
+
         {isPlacementPhase && (
           <div className="space-y-6">
             <div className="text-center max-w-md mx-auto">
@@ -241,7 +279,8 @@ export const Game: React.FC<GameProps> = ({
                 STRATEGIC FLEET DEPLOYMENT
               </h2>
               <p className="text-xs text-slate-400 mt-1">
-                Drag or click sectors to position warships. Press <strong>R</strong> or [ROTATE] to toggle orientation.
+                Drag or click sectors to position warships. Press{" "}
+                <strong>R</strong> or [ROTATE] to toggle orientation.
               </p>
             </div>
 
@@ -279,7 +318,7 @@ export const Game: React.FC<GameProps> = ({
           <div className="space-y-4">
             {/* Turn Indicator */}
             <TurnIndicator
-              currentTurn={room?.currentTurn || 'player1'}
+              currentTurn={room?.currentTurn || "player1"}
               localPlayerRole={localPlayer.role}
               opponentName={opponentName}
             />
@@ -294,23 +333,23 @@ export const Game: React.FC<GameProps> = ({
             <div className="flex sm:hidden max-w-md mx-auto w-full gap-2 p-1 rounded-xl bg-slate-900 border border-slate-800">
               <button
                 type="button"
-                onClick={() => setMobileActiveTab('enemy')}
+                onClick={() => setMobileActiveTab("enemy")}
                 className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                  mobileActiveTab === 'enemy'
-                    ? 'bg-rose-950 text-rose-300 border border-rose-500/50 shadow-md'
-                    : 'text-slate-400 hover:text-slate-200'
+                  mobileActiveTab === "enemy"
+                    ? "bg-rose-950 text-rose-300 border border-rose-500/50 shadow-md"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 <Crosshair className="w-3.5 h-3.5 text-rose-400" />
-                <span>ENEMY WATERS {isMyTurn && '🎯'}</span>
+                <span>ENEMY WATERS {isMyTurn && "🎯"}</span>
               </button>
               <button
                 type="button"
-                onClick={() => setMobileActiveTab('fleet')}
+                onClick={() => setMobileActiveTab("fleet")}
                 className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
-                  mobileActiveTab === 'fleet'
-                    ? 'bg-cyan-950 text-cyan-300 border border-cyan-500/50 shadow-md'
-                    : 'text-slate-400 hover:text-slate-200'
+                  mobileActiveTab === "fleet"
+                    ? "bg-cyan-950 text-cyan-300 border border-cyan-500/50 shadow-md"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 <Shield className="w-3.5 h-3.5 text-cyan-400" />
@@ -321,7 +360,9 @@ export const Game: React.FC<GameProps> = ({
             {/* Two Boards: Side-by-side on desktop, toggleable or stacked on mobile */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start max-w-5xl mx-auto">
               {/* MY FLEET BOARD */}
-              <div className={`${mobileActiveTab === 'enemy' ? 'hidden sm:block' : 'block'}`}>
+              <div
+                className={`${mobileActiveTab === "enemy" ? "hidden sm:block" : "block"}`}
+              >
                 <GameBoard
                   title="MY FLEET"
                   isEnemy={false}
@@ -331,7 +372,9 @@ export const Game: React.FC<GameProps> = ({
               </div>
 
               {/* ENEMY WATERS BOARD */}
-              <div className={`${mobileActiveTab === 'fleet' ? 'hidden sm:block' : 'block'}`}>
+              <div
+                className={`${mobileActiveTab === "fleet" ? "hidden sm:block" : "block"}`}
+              >
                 <GameBoard
                   title="ENEMY WATERS"
                   isEnemy={true}
@@ -346,12 +389,14 @@ export const Game: React.FC<GameProps> = ({
             {/* Fleet Status Bar */}
             <div className="max-w-md sm:max-w-2xl mx-auto p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-400 flex items-center justify-around font-mono">
               <div>
-                Enemy Ships Sunk:{' '}
-                <strong className="text-rose-400">{sunkEnemyShips.length} / 5</strong>
+                Enemy Ships Sunk:{" "}
+                <strong className="text-rose-400">
+                  {sunkEnemyShips.length} / 5
+                </strong>
               </div>
               <div className="w-px h-4 bg-slate-800" />
               <div>
-                Friendly Ships Intact:{' '}
+                Friendly Ships Intact:{" "}
                 <strong className="text-cyan-400">
                   {myFleet.filter((s) => !s.isSunk).length} / 5
                 </strong>

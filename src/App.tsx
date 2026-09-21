@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Home } from "./pages/Home";
 import { Game } from "./pages/Game";
 import { CreateGame } from "./components/lobby/CreateGame";
@@ -7,6 +7,7 @@ import { RoomLobby } from "./components/lobby/RoomLobby";
 import { HowToPlayModal } from "./components/ui/HowToPlayModal";
 import { SupabaseConfigModal } from "./components/ui/SupabaseConfigModal";
 import { generateRoomCode } from "./lib/roomCode";
+import { createRoom, getSupabaseClient, joinRoom } from "./lib/supabase";
 import type { GamePhase, Player, Room } from "./types/battleship";
 
 const DEFAULT_RANKS = [
@@ -51,6 +52,87 @@ export default function App() {
   const [localPlayer, setLocalPlayer] = useState<Player | null>(null);
   const [activeRoom, setActiveRoom] = useState<Room | null>(null);
   const [lobbyOpponentConnected, setLobbyOpponentConnected] = useState(false);
+  const [joinError, setJoinError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [isJoining, setIsJoining] = useState(false);
+  const activeRoomRef = useRef<Room | null>(null);
+  activeRoomRef.current = activeRoom;
+
+  // Keep the host reachable while the create screen is open. Gameplay mounts later.
+  useEffect(() => {
+    if (phase !== "create" || !localPlayer || !roomCode) return;
+
+    const channel = getSupabaseClient()?.channel(
+      `battleship-room:${roomCode}`,
+      {
+        config: {
+          broadcast: { self: false },
+          presence: { key: localPlayer.id },
+        },
+      },
+    );
+    let broadcastChannel: BroadcastChannel | null = null;
+
+    const startListening = () => {
+      channel
+        ?.on("broadcast", { event: "GUEST_JOINED" }, ({ payload }) => {
+          const guest = payload?.player as Player | undefined;
+          if (!guest) return;
+          const updatedRoom = activeRoomRef.current
+            ? {
+                ...activeRoomRef.current,
+                player2: guest,
+                status: "placement" as const,
+              }
+            : null;
+          if (!updatedRoom) return;
+          setLobbyOpponentConnected(true);
+          setActiveRoom(updatedRoom);
+          channel?.send({
+            type: "broadcast",
+            event: "ROOM_SYNC",
+            payload: { room: updatedRoom },
+          });
+          setPhase("game");
+        })
+        .subscribe((status) => {
+          if (status === "SUBSCRIBED") {
+            channel.track({ id: localPlayer.id, role: localPlayer.role });
+          }
+        });
+    };
+
+    if (channel) {
+      startListening();
+    } else if (typeof BroadcastChannel !== "undefined") {
+      broadcastChannel = new BroadcastChannel(`battleship_relay_${roomCode}`);
+      broadcastChannel.onmessage = (event) => {
+        if (event.data?.event !== "GUEST_JOINED") return;
+        const guest = event.data.payload?.player as Player | undefined;
+        if (!guest) return;
+        const updatedRoom = activeRoomRef.current
+          ? {
+              ...activeRoomRef.current,
+              player2: guest,
+              status: "placement" as const,
+            }
+          : null;
+        if (!updatedRoom) return;
+        setLobbyOpponentConnected(true);
+        setActiveRoom(updatedRoom);
+        broadcastChannel?.postMessage({
+          event: "ROOM_SYNC",
+          payload: { room: updatedRoom },
+        });
+        setPhase("game");
+      };
+    }
+
+    return () => {
+      if (channel) getSupabaseClient()?.removeChannel(channel);
+      broadcastChannel?.close();
+    };
+  }, [phase, localPlayer, roomCode]);
 
   // Save player name when changed
   const handlePlayerNameChange = (name: string) => {
@@ -81,8 +163,25 @@ export default function App() {
   }, []);
 
   // Action: Create Game
-  const handleStartCreateGame = () => {
+  const handleStartCreateGame = async () => {
     const newCode = generateRoomCode();
+    setCreateError(null);
+
+    try {
+      await createRoom(newCode, playerId);
+    } catch (error) {
+      setCreateError(
+        error instanceof Error
+          ? `Unable to create online room: ${error.message}`
+          : "Unable to create online room.",
+      );
+      return;
+    }
+
+    if (typeof window !== "undefined") {
+      window.history.replaceState({}, "", `/?join=${newCode}`);
+    }
+    setInvitedCode(null);
     setRoomCode(newCode);
 
     const hostPlayer: Player = {
@@ -114,7 +213,19 @@ export default function App() {
   };
 
   // Action: Execute Join Room
-  const handleExecuteJoin = (codeToJoin: string) => {
+  const handleExecuteJoin = async (codeToJoin: string) => {
+    setIsJoining(true);
+    setJoinError(null);
+    try {
+      await joinRoom(codeToJoin, playerId);
+    } catch (error) {
+      setJoinError(
+        error instanceof Error ? error.message : "Unable to join this room.",
+      );
+      setIsJoining(false);
+      return;
+    }
+
     const guestPlayer: Player = {
       id: playerId,
       name: playerName || "Captain Drake",
@@ -123,14 +234,14 @@ export default function App() {
       isConnected: true,
     };
     setLocalPlayer(guestPlayer);
-    setRoomCode(codeToJoin);
+    setRoomCode(codeToJoin.toUpperCase());
 
     const room: Room = {
       roomId: `room_${codeToJoin}`,
-      roomCode: codeToJoin,
+      roomCode: codeToJoin.toUpperCase(),
       player1: null,
       player2: guestPlayer,
-      status: "waiting",
+      status: "placement",
       currentTurn: "player1",
       winner: null,
       createdAt: Date.now(),
@@ -139,6 +250,7 @@ export default function App() {
 
     // Enter directly into active game / lobby
     setPhase("game");
+    setIsJoining(false);
   };
 
   // When Host sees Challenger connect, can move to Lobby or directly into placement
@@ -147,8 +259,12 @@ export default function App() {
   };
 
   const handleReturnHome = () => {
+    if (typeof window !== "undefined") {
+      window.history.replaceState({}, "", "/");
+    }
     setPhase("home");
     setRoomCode("");
+    setInvitedCode(null);
     setLocalPlayer(null);
     setActiveRoom(null);
     setLobbyOpponentConnected(false);
@@ -176,6 +292,7 @@ export default function App() {
             onPlayerNameChange={handlePlayerNameChange}
             onBack={handleReturnHome}
             opponentConnected={lobbyOpponentConnected}
+            error={createError}
           />
         </div>
       )}
@@ -189,6 +306,8 @@ export default function App() {
             onPlayerNameChange={handlePlayerNameChange}
             onJoin={handleExecuteJoin}
             onBack={handleReturnHome}
+            error={joinError}
+            isJoining={isJoining}
           />
         </div>
       )}
@@ -210,6 +329,9 @@ export default function App() {
         <Game
           roomCode={roomCode}
           localPlayer={localPlayer}
+          initialOpponentConnected={Boolean(
+            activeRoom?.player1 && activeRoom.player2,
+          )}
           onReturnHome={handleReturnHome}
           onOpenHowToPlay={() => setHowToPlayOpen(true)}
         />

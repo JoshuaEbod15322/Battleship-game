@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Copy, Check, Share2, Users, ArrowLeft, Shield, User } from 'lucide-react';
-import { getInviteUrl } from '../../lib/roomCode';
-import { sound } from '../../lib/sound';
+import React, { useState } from "react";
+import { motion } from "motion/react";
+import {
+  Copy,
+  Check,
+  Share2,
+  Users,
+  ArrowLeft,
+  Shield,
+  User,
+} from "lucide-react";
+import { getInviteUrl } from "../../lib/roomCode";
+import { sound } from "../../lib/sound";
 
 interface CreateGameProps {
   roomCode: string;
@@ -10,6 +18,7 @@ interface CreateGameProps {
   onPlayerNameChange: (name: string) => void;
   onBack: () => void;
   opponentConnected: boolean;
+  error?: string | null;
 }
 
 export const CreateGame: React.FC<CreateGameProps> = ({
@@ -18,6 +27,7 @@ export const CreateGame: React.FC<CreateGameProps> = ({
   onPlayerNameChange,
   onBack,
   opponentConnected,
+  error,
 }) => {
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
@@ -144,19 +154,26 @@ export const CreateGame: React.FC<CreateGameProps> = ({
       </div>
 
       {/* Waiting Status Panel */}
+      {error && (
+        <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-600 text-rose-300 text-xs mb-4">
+          {error}
+        </div>
+      )}
       <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 text-center">
         <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-300 mb-1">
           <Users className="w-4 h-4 text-cyan-400" />
           <span>
-            {opponentConnected ? '🟢 Opponent Joined!' : 'Waiting for opponent...'}
+            {opponentConnected
+              ? "🟢 Opponent Joined!"
+              : "Waiting for opponent..."}
           </span>
         </div>
         <div className="text-[11px] text-slate-500 flex items-center justify-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
           <span>
             {opponentConnected
-              ? 'Synchronizing tactical grid with rival...'
-              : 'Stand by at your battlestation'}
+              ? "Synchronizing tactical grid with rival..."
+              : "Stand by at your battlestation"}
           </span>
         </div>
       </div>
