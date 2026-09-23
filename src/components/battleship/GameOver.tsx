@@ -46,7 +46,6 @@ export const GameOver: React.FC<GameOverProps> = ({
           After-Action Report
         </div>
 
-        {/* Stamp */}
         <div className="mt-4 mb-2 flex justify-center">
           <span
             className={`wr-stamp wr-head text-lg px-5 py-1 ${
@@ -57,7 +56,6 @@ export const GameOver: React.FC<GameOverProps> = ({
           </span>
         </div>
 
-        {/* Icon */}
         <div className="relative mb-4 mt-4 flex justify-center">
           {isWinner ? (
             <div className="w-20 h-20 bg-[#0d0b06] border border-[#c9a227] flex items-center justify-center text-[#e8c84a]">
@@ -80,7 +78,6 @@ export const GameOver: React.FC<GameOverProps> = ({
             : "Hostile guns found their marks. Regroup, re-chart, return."}
         </p>
 
-        {/* Action Buttons */}
         <div className="space-y-3">
           <button
             id="play-again-btn"

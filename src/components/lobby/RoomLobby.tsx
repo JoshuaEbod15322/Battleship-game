@@ -45,9 +45,7 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
         </p>
       </div>
 
-      {/* Versus Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative mb-6">
-        {/* PLAYER 1 */}
         <div className="p-4 bg-[#0d0b06] border border-[#6f5d21] relative">
           <div className="text-[10px] text-[#c9a227] uppercase tracking-[0.25em] mb-1 font-bold">
             Officer One (Host)
@@ -63,12 +61,10 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
           </div>
         </div>
 
-        {/* VS Badge */}
         <div className="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-10 h-10 rotate-45 bg-[#14110a] border border-[#c9a227] items-center justify-center shadow-md">
           <span className="-rotate-45 wr-head text-xs text-[#e8c84a]">VS</span>
         </div>
 
-        {/* PLAYER 2 */}
         <div
           className={`p-4 border relative ${
             p2 && opponentConnected
@@ -100,7 +96,6 @@ export const RoomLobby: React.FC<RoomLobbyProps> = ({
         </div>
       </div>
 
-      {/* Button to proceed to placement */}
       {bothPresent ? (
         <button
           id="continue-to-placement-btn"

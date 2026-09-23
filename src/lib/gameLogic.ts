@@ -7,25 +7,16 @@ import type {
   ShipDefinition,
 } from '../types/battleship';
 
-/**
- * Creates an empty 10x10 board initialized to 'empty'
- */
 export function createBoard(size: number = BOARD_SIZE): CellState[][] {
   return Array.from({ length: size }, () =>
     Array.from({ length: size }, () => 'empty' as CellState)
   );
 }
 
-/**
- * Checks if a coordinate is within 0-9 boundaries
- */
 export function isValidCoordinate(row: number, col: number, size: number = BOARD_SIZE): boolean {
   return row >= 0 && row < size && col >= 0 && col < size;
 }
 
-/**
- * Calculates the cells a ship occupies given its origin, orientation, and size
- */
 export function getShipCoordinates(
   origin: Coordinate,
   orientation: Orientation,
@@ -40,10 +31,6 @@ export function getShipCoordinates(
   return coords;
 }
 
-/**
- * Checks if a ship can be placed at the specified origin and orientation
- * without going out of bounds or colliding with existing placed ships
- */
 export function canPlaceShip(
   ship: ShipDefinition,
   origin: Coordinate,
@@ -54,14 +41,12 @@ export function canPlaceShip(
 ): boolean {
   const coords = getShipCoordinates(origin, orientation, ship.size);
 
-  // Check boundary limits
   for (const { row, col } of coords) {
     if (!isValidCoordinate(row, col, boardSize)) {
       return false;
     }
   }
 
-  // Check collisions against other placed ships
   for (const existing of existingShips) {
     if (ignoreShipId && existing.id === ignoreShipId) continue;
     for (const ec of existing.coordinates) {
@@ -74,9 +59,6 @@ export function canPlaceShip(
   return true;
 }
 
-/**
- * Places or updates a ship in the fleet
- */
 export function placeShip(
   shipDef: ShipDefinition,
   origin: Coordinate,
@@ -108,16 +90,10 @@ export function placeShip(
   return [...filtered, newShip];
 }
 
-/**
- * Rotates orientation between 'horizontal' and 'vertical'
- */
 export function rotateOrientation(current: Orientation): Orientation {
   return current === 'horizontal' ? 'vertical' : 'horizontal';
 }
 
-/**
- * Generates a valid, randomized layout for all 5 classic ships
- */
 export function randomizeFleet(
   shipsToPlace: ShipDefinition[] = SHIPS,
   boardSize: number = BOARD_SIZE
@@ -164,7 +140,6 @@ export function randomizeFleet(
       }
 
       if (!placedCurrent) {
-        // Retry whole fleet layout if blocked
         break;
       }
     }
@@ -173,9 +148,6 @@ export function randomizeFleet(
   return placed;
 }
 
-/**
- * Checks if a specific coordinate hits any ship in the fleet
- */
 export function isHit(coord: Coordinate, ships: PlacedShip[]): { hit: boolean; ship?: PlacedShip } {
   for (const ship of ships) {
     const matched = ship.coordinates.some(
@@ -188,11 +160,6 @@ export function isHit(coord: Coordinate, ships: PlacedShip[]): { hit: boolean; s
   return { hit: false };
 }
 
-/**
- * Evaluates an incoming attack against a defender's fleet.
- * Updates the defender's ships and returns whether it was hit/miss,
- * if any ship was sunk, and if the entire fleet is destroyed.
- */
 export function attackFleet(
   coord: Coordinate,
   fleet: PlacedShip[],
@@ -204,7 +171,6 @@ export function attackFleet(
   allSunk: boolean;
   duplicate: boolean;
 } {
-  // Check duplicate
   const isDuplicate = attackHistory.some((a) => a.row === coord.row && a.col === coord.col);
   if (isDuplicate) {
     return {
@@ -250,17 +216,11 @@ export function attackFleet(
   };
 }
 
-/**
- * Checks if all ships in the fleet are destroyed
- */
 export function isFleetDestroyed(fleet: PlacedShip[]): boolean {
   if (fleet.length < SHIPS.length) return false;
   return fleet.every((s) => s.isSunk);
 }
 
-/**
- * Returns coordinate label e.g. "B4", "A10"
- */
 export function getCoordinateLabel(row: number, col: number): string {
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
   return `${letters[col] || '?'}${row + 1}`;

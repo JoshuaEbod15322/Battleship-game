@@ -27,20 +27,18 @@ export const Home: React.FC<HomeProps> = ({
 }) => {
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
-      {/* War-room wall: map grid fading into dark oil-smoke */}
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#c9a22714_1px,transparent_1px),linear-gradient(to_bottom,#c9a22714_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_65%_55%_at_50%_45%,#000_60%,transparent_100%)]" />
       <div className="absolute inset-x-0 top-0 -z-10 flex justify-center pt-10 pointer-events-none opacity-25">
         <div className="w-[130vmax] h-[130vmax] rounded-full motion-safe:animate-spin [animation-duration:60s] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_340deg,#c9a22755_355deg,transparent_360deg)]" />
       </div>
 
-      {/* Top command strip */}
       <div className="absolute top-0 left-0 right-0 z-20 border-b border-[#4d452c] bg-[#14110a]/90 backdrop-blur-sm">
         <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 flex items-center justify-center text-[#c9a227] border border-[#6f5d21] bg-[#0d0b06]">
-              <Anchor className="w-5 h-5" />
+          <div className="flex items-center gap-1">
+            <div className="w-8 h-8 flex items-center justify-center text-[#c9a227]">
+              <Anchor className="w-6 h-6" />
             </div>
-            <span className="wr-head text-sm tracking-[0.25em] text-[#d9c9a3] hidden sm:inline">
+            <span className="wr-head text-md tracking-[0.25em] text-[#d9c9a3] hidden sm:inline">
               NAVAL OPERATIONS
             </span>
             <span className="wr-head text-sm tracking-[0.25em] text-[#d9c9a3] sm:hidden">
@@ -53,7 +51,6 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </div>
 
-      {/* Main dossier */}
       <motion.div
         id="home-main-card"
         initial={{ opacity: 0, scale: 0.97, y: 15 }}
@@ -61,7 +58,6 @@ export const Home: React.FC<HomeProps> = ({
         transition={{ duration: 0.35 }}
         className="wr-panel w-full max-w-md mt-14 p-6 sm:p-8 text-center relative z-10"
       >
-        {/* File tab */}
         <div className="absolute -top-3 left-6 wr-plate px-3 py-0.5 text-[10px] font-bold tracking-[0.3em] uppercase">
           File № 1944-B
         </div>
@@ -69,7 +65,6 @@ export const Home: React.FC<HomeProps> = ({
           Top Secret
         </div>
 
-        {/* Brass emblem */}
         <div className="relative w-20 h-20 mx-auto mb-5 mt-2">
           <div className="absolute inset-0 border border-[#6f5d21] rotate-45" />
           <div className="absolute inset-1.5 border border-[#6f5d21]/60 rotate-45" />
@@ -78,7 +73,6 @@ export const Home: React.FC<HomeProps> = ({
           </div>
         </div>
 
-        {/* Title block */}
         <p className="text-[10px] tracking-[0.4em] uppercase text-[#a8956c] mb-1">
           Admiralty Order // Two Commanders
         </p>
@@ -92,7 +86,6 @@ export const Home: React.FC<HomeProps> = ({
           Command your fleet. Sink theirs.
         </p>
 
-        {/* Incoming invite dispatch */}
         {invitedRoomCode && (
           <div className="mb-6 p-3.5 bg-[#0d0b06] border border-[#c9a227] text-[#e9dfc4] text-xs text-left flex items-start gap-2.5">
             <ShieldAlert className="w-4 h-4 text-[#c9a227] shrink-0 mt-0.5" />
@@ -111,7 +104,6 @@ export const Home: React.FC<HomeProps> = ({
           </div>
         )}
 
-        {/* Orders */}
         <div className="space-y-3">
           <button
             id="home-create-game-btn"
@@ -153,7 +145,6 @@ export const Home: React.FC<HomeProps> = ({
           </button>
         </div>
 
-        {/* Footer docket */}
         <div className="mt-8 pt-4 border-t border-[#4d452c] flex items-center justify-between text-[10px] tracking-[0.2em] uppercase text-[#a8956c]">
           <span>Battle Room # 7 </span>
           <span className="text-[#efe3c2]">

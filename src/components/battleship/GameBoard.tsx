@@ -29,8 +29,6 @@ interface GameBoardProps {
   }>;
   canAttack?: boolean;
   onAttack?: (row: number, col: number) => void;
-
-  // Placement mode props
   isPlacementMode?: boolean;
   selectedShipDef?: ShipDefinition | null;
   orientation?: Orientation;
@@ -52,7 +50,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
 }) => {
   const [hoverCoord, setHoverCoord] = useState<Coordinate | null>(null);
 
-  // Calculate placement preview coordinates
   let placementPreviewCoords: Coordinate[] = [];
   let isPlacementValid = false;
 
@@ -72,14 +69,12 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     );
   }
 
-  // Helper to find ship on a coordinate
   const getShipAtCoord = (row: number, col: number): PlacedShip | undefined => {
     return placedShips.find((s) =>
       s.coordinates.some((c) => c.row === row && c.col === col),
     );
   };
 
-  // Helper to find attack on a coordinate
   const getAttackAtCoord = (
     row: number,
     col: number,
@@ -87,7 +82,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     return attacks.find((a) => a.row === row && a.col === col);
   };
 
-  // Helper to check if sunk on coordinate
   const isSunkAtCoord = (row: number, col: number): boolean => {
     if (!isEnemy) {
       const ship = getShipAtCoord(row, col);
@@ -98,7 +92,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     );
   };
 
-  // Helper to find the sunk ship reveal covering a coordinate (enemy board)
   const getSunkShipAtCoord = (row: number, col: number) => {
     return sunkShips.find((s) =>
       s.coordinates.some((c) => c.row === row && c.col === col),
@@ -110,7 +103,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
       id={`game-board-${isEnemy ? "enemy" : "fleet"}`}
       className="wr-panel wr-map relative flex flex-col p-2.5 sm:p-4 max-w-md w-full mx-auto min-w-0"
     >
-      {/* Board Header */}
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-[#4d452c]">
         <div className="flex items-center gap-2">
           {isEnemy ? (
@@ -133,17 +125,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           </div>
         </div>
 
-        {/* Chart scale plate */}
         <div className="wr-plate px-2 py-0.5 text-[11px] font-bold tracking-[0.2em]">
           <span> 10×10</span>
         </div>
       </div>
 
-      {/* Grid with Column & Row Headers */}
       <div className="relative w-full">
-        {/* Column Labels (A-J) */}
         <div className="grid grid-cols-11 text-center text-[9px] sm:text-xs font-bold tracking-[0.15em] text-[#c9a227] mb-1">
-          <div className="w-4 sm:w-6" /> {/* spacer for row labels */}
+          <div className="w-4 sm:w-6" />
           {COLUMN_LABELS.map((col) => (
             <div key={col} className="select-none">
               {col}
@@ -151,19 +140,16 @@ export const GameBoard: React.FC<GameBoardProps> = ({
           ))}
         </div>
 
-        {/* Rows with labels (1-10) and grid cells */}
         <div className="space-y-0 sm:space-y-0">
           {ROW_LABELS.map((rowLabel, rIdx) => (
             <div
               key={rowLabel}
               className="grid grid-cols-11 items-center gap-0 sm:gap-0"
             >
-              {/* Row Label (1-10) */}
               <div className="w-4 sm:w-6 text-right pr-0.5 sm:pr-1 text-[9px] sm:text-xs font-bold tracking-[0.15em] text-[#c9a227] select-none">
                 {rowLabel}
               </div>
 
-              {/* 10 Cells in this row */}
               {COLUMN_LABELS.map((_, cIdx) => {
                 const ship = !isEnemy ? getShipAtCoord(rIdx, cIdx) : undefined;
                 const sunkReveal = isEnemy
@@ -174,9 +160,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                 const isMiss = attack?.result === "miss";
                 const isSunk = isSunkAtCoord(rIdx, cIdx);
 
-                // Which segment of the ship is this cell? (for image tiling)
-                // Friendly board: index within the placed ship.
-                // Enemy board: index within the sunk-ship reveal.
                 const shipSegmentIndex = ship
                   ? ship.coordinates.findIndex(
                       (c) => c.row === rIdx && c.col === cIdx,
@@ -187,7 +170,6 @@ export const GameBoard: React.FC<GameBoardProps> = ({
                       )
                     : 0;
 
-                // Check if this cell is part of placement preview
                 const isPreview = placementPreviewCoords.some(
                   (c) => c.row === rIdx && c.col === cIdx,
                 );

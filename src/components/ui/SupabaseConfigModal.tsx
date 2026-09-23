@@ -41,7 +41,6 @@ export function SupabaseConfigModal({ isOpen, onClose, onSaved }: SupabaseConfig
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             className="w-full max-w-md wr-panel overflow-hidden text-[#e9dfc4]"
           >
-            {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#4d452c] bg-[#0d0b06]">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 bg-[#1c2415] border border-[#7da05c] flex items-center justify-center text-[#7da05c]">
@@ -67,9 +66,7 @@ export function SupabaseConfigModal({ isOpen, onClose, onSaved }: SupabaseConfig
               </button>
             </div>
 
-            {/* Body */}
             <form onSubmit={handleSave} className="p-6 space-y-4">
-              {/* Status banner */}
               <div
                 className={`p-3 border flex items-start gap-3 ${
                   configured

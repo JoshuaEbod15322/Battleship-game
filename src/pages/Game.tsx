@@ -36,13 +36,8 @@ interface GameProps {
   onOpenHowToPlay: () => void;
 }
 
-// Shared clipped-corner panel shape used across HUD chrome, in place of
-// rounded "SaaS card" corners, to read as instrument panelling rather
-// than generic UI chrome.
 const PANEL_CLIP =
   "[clip-path:polygon(8px_0,100%_0,100%_calc(100%-8px),calc(100%-8px)_100%,0_100%,0_8px)]";
-// const PANEL_CLIP_SM =
-//   "[clip-path:polygon(6px_0,100%_0,100%_calc(100%-6px),calc(100%-6px)_100%,0_100%,0_6px)]" ;
 
 export const Game: React.FC<GameProps> = ({
   roomCode,
@@ -76,13 +71,11 @@ export const Game: React.FC<GameProps> = ({
     initialOpponentConnected,
   );
 
-  // Placement local state
   const [selectedShipDef, setSelectedShipDef] = useState<ShipDefinition | null>(
     SHIPS[0],
   );
   const [orientation, setOrientation] = useState<Orientation>("horizontal");
 
-  // Mobile active board tab ('fleet' | 'enemy')
   const [mobileActiveTab, setMobileActiveTab] = useState<"fleet" | "enemy">(
     "enemy",
   );
@@ -100,7 +93,6 @@ export const Game: React.FC<GameProps> = ({
   const isMyTurn = room?.currentTurn === localPlayer.role;
   const friendlyAfloat = myFleet.filter((s) => !s.isSunk).length;
 
-  // Handle ship placement by clicking on board cell
   const handleBoardPlace = (origin: Coordinate) => {
     if (!selectedShipDef || myFleetReady) return;
 
@@ -109,7 +101,6 @@ export const Game: React.FC<GameProps> = ({
       sound.playButton();
       setMyFleet(newFleet);
 
-      // Select next unplaced ship automatically
       const nextUnplaced = SHIPS.find(
         (s) => !newFleet.some((placed) => placed.id === s.id),
       );
@@ -117,29 +108,25 @@ export const Game: React.FC<GameProps> = ({
         setSelectedShipDef(nextUnplaced);
       }
     } else {
-      sound.playMiss(); // invalid buzzer feedback
+      sound.playMiss();
     }
   };
 
-  // Rotate orientation
   const handleRotate = () => {
     setOrientation((prev) => rotateOrientation(prev));
   };
 
-  // Randomize all 5 ships
   const handleRandomize = () => {
     const randomFleet = randomizeFleet(SHIPS);
     setMyFleet(randomFleet);
     setSelectedShipDef(null);
   };
 
-  // Reset fleet
   const handleReset = () => {
     setMyFleet([]);
     setSelectedShipDef(SHIPS[0]);
   };
 
-  // Keyboard shortcut 'R' to rotate
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "r" || e.key === "R") {
@@ -157,14 +144,11 @@ export const Game: React.FC<GameProps> = ({
 
   return (
     <div className="min-h-screen flex flex-col bg-[#12100a] text-[#e9dfc4] relative overflow-x-hidden">
-      {/* War-room wall: faint chart grid over oil-dark plaster */}
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#c9a22710_1px,transparent_1px),linear-gradient(to_bottom,#c9a22710_1px,transparent_1px)] bg-[size:3rem_3rem] -z-10 [mask-image:radial-gradient(ellipse_80%_70%_at_50%_30%,#000_50%,transparent_100%)]" />
-      {/* Slow plot-table sweep, the single ambient motion cue */}
       <div className="fixed inset-0 -z-10 flex items-center justify-center overflow-hidden pointer-events-none">
         <div className="w-[140vmax] h-[140vmax] rounded-full opacity-[0.05] motion-safe:animate-spin [animation-duration:40s] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_300deg,#c9a227_330deg,transparent_360deg)]" />
       </div>
 
-      {/* Top Command Strip */}
       <header className="sticky top-0 z-30 bg-[#14110a]/95 backdrop-blur-md border-b border-[#4d452c] px-2 sm:px-4 py-2.5 sm:py-3">
         <div className="max-w-7xl mx-auto flex sm:grid sm:grid-cols-[1fr_auto_1fr] items-center justify-between gap-2 sm:gap-3">
           <div className="flex items-center gap-2 sm:gap-3 justify-self-start min-w-0 flex-1">
@@ -193,7 +177,6 @@ export const Game: React.FC<GameProps> = ({
             </div>
           </div>
 
-          {/* Centered callsign vs opponent, color-coded to match board sides */}
           <div className="hidden sm:flex items-center gap-2 justify-self-center text-xs whitespace-nowrap tracking-[0.15em] uppercase">
             <span className="font-semibold text-[#e8c84a]">
               {localPlayer.name}
@@ -238,7 +221,6 @@ export const Game: React.FC<GameProps> = ({
           </div>
         </div>
 
-        {/* Mobile callsign row, centered below the main bar */}
         <div className="sm:hidden max-w-7xl mx-auto mt-1.5 flex items-center justify-center gap-2 text-[11px] truncate tracking-[0.15em] uppercase">
           <span className="font-semibold text-[#e8c84a] truncate max-w-[9rem]">
             {localPlayer.name}
@@ -250,7 +232,6 @@ export const Game: React.FC<GameProps> = ({
         </div>
       </header>
 
-      {/* Opponent Left Overlay */}
       <AnimatePresence>
         {opponentLeft && !isFinishedPhase && (
           <motion.div
@@ -281,9 +262,7 @@ export const Game: React.FC<GameProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Main Game Stage */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col justify-center relative">
-        {/* Corner framing, brass surveyor marks */}
         <div className="hidden sm:block pointer-events-none absolute inset-4 sm:inset-6 -z-0">
           <span className="absolute top-0 left-0 w-5 h-5 border-l-2 border-t-2 border-[#6f5d21]" />
           <span className="absolute top-0 right-0 w-5 h-5 border-r-2 border-t-2 border-[#6f5d21]" />
@@ -292,7 +271,6 @@ export const Game: React.FC<GameProps> = ({
         </div>
 
         <AnimatePresence mode="wait">
-          {/* PHASE 0: WAITING FOR OPPONENT */}
           {isWaitingForOpponent && (
             <motion.div
               key="waiting"
@@ -316,7 +294,6 @@ export const Game: React.FC<GameProps> = ({
             </motion.div>
           )}
 
-          {/* PHASE 1: SHIP PLACEMENT */}
           {!isWaitingForOpponent && isPlacementPhase && (
             <motion.div
               key="placement"
@@ -372,7 +349,6 @@ export const Game: React.FC<GameProps> = ({
             </motion.div>
           )}
 
-          {/* PHASE 2: BATTLE */}
           {(isBattlePhase || isFinishedPhase) && (
             <motion.div
               key="battle"
@@ -393,7 +369,6 @@ export const Game: React.FC<GameProps> = ({
                 localPlayerRole={localPlayer.role}
               />
 
-              {/* Mobile Tab Switcher */}
               <div
                 className={`flex sm:hidden max-w-md mx-auto w-full gap-2 p-1 bg-[#14110a] border border-[#4d452c] ${PANEL_CLIP}`}
               >
@@ -426,7 +401,6 @@ export const Game: React.FC<GameProps> = ({
                 </button>
               </div>
 
-              {/* Two Boards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start max-w-5xl mx-auto">
                 <div
                   className={`${mobileActiveTab === "enemy" ? "hidden sm:block" : "block"}`}
@@ -453,7 +427,6 @@ export const Game: React.FC<GameProps> = ({
                 </div>
               </div>
 
-              {/* Fleet Status Ledger */}
               <div
                 className={`max-w-md sm:max-w-2xl mx-auto flex flex-col sm:flex-row border border-[#4d452c] bg-[#14110a]`}
               >
@@ -562,7 +535,6 @@ export const Game: React.FC<GameProps> = ({
         )}
       </AnimatePresence>
 
-      {/* GAME OVER MODAL */}
       {isFinishedPhase && (
         <GameOver
           winner={room?.winner || null}

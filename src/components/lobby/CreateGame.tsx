@@ -87,7 +87,6 @@ export const CreateGame: React.FC<CreateGameProps> = ({
         </p>
       </div>
 
-      {/* Commander Call Sign */}
       <div className="mb-5">
         <label className="block text-[11px] uppercase tracking-[0.2em] text-[#a8956c] mb-1.5 flex items-center gap-1.5">
           <User className="w-3.5 h-3.5 text-[#c9a227]" />
@@ -104,7 +103,6 @@ export const CreateGame: React.FC<CreateGameProps> = ({
         />
       </div>
 
-      {/* Big Room Code Box */}
       <div className="p-4 bg-[#0d0b06] border border-[#6f5d21] text-center mb-5 relative">
         <div className="absolute top-1 left-2 text-[9px] tracking-[0.3em] text-[#6e6040] uppercase">
           Cipher
@@ -117,7 +115,6 @@ export const CreateGame: React.FC<CreateGameProps> = ({
         </div>
       </div>
 
-      {/* Copy Buttons */}
       <div className="grid grid-cols-2 gap-2 mb-6">
         <button
           id="copy-room-code-btn"
@@ -158,7 +155,6 @@ export const CreateGame: React.FC<CreateGameProps> = ({
         </button>
       </div>
 
-      {/* Waiting Status Panel */}
       {error && (
         <div className="p-3 bg-[#2a0f0c] border border-[#b3352b] text-[#e89a90] text-xs mb-4">
           {error}

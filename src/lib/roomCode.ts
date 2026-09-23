@@ -1,8 +1,5 @@
-/**
- * Utilities for Room Codes & Invite Links
- */
-
-const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Excludes 0, O, 1, I to avoid confusion
+// Ambiguous glyphs (0/O, 1/I) excluded so codes read cleanly over voice/chat.
+const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 export function generateRoomCode(length: number = 6): string {
   let code = '';

@@ -61,7 +61,6 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         </div>
       </div>
 
-      {/* Ships List Selector */}
       <div className="space-y-1.5">
         {SHIPS.map((ship) => {
           const isPlaced = placedShips.some((s) => s.id === ship.id);
@@ -117,7 +116,6 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
                 </div>
               </div>
 
-              {/* Ship Segment Indicator */}
               <div className="flex gap-1 items-center">
                 {Array.from({ length: ship.size }).map((_, i) => (
                   <div
@@ -137,7 +135,6 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         })}
       </div>
 
-      {/* Action Buttons: Rotate, Randomize, Reset */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
         <button
           id="rotate-btn"
@@ -189,7 +186,6 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         </button>
       </div>
 
-      {/* Opponent readiness notice */}
       <div className="text-[11px] p-2 bg-[#0d0b06] border border-[#4d452c] flex items-center justify-between text-[#a8956c]">
         <span className="tracking-[0.2em] uppercase">Rival staff:</span>
         <span
@@ -201,7 +197,6 @@ export const PlacementControls: React.FC<PlacementControlsProps> = ({
         </span>
       </div>
 
-      {/* Ready Button */}
       <button
         id="ready-btn"
         type="button"

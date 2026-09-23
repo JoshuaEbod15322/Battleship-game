@@ -2,11 +2,6 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   X,
   HelpCircle,
-  // Shield,
-  // Target,
-  // Waves,
-  // Flame,
-  // Award,
 } from "lucide-react";
 import { SHIPS } from "../../config/ships";
 import { sound } from "../../lib/sound";
@@ -29,7 +24,6 @@ export function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
             transition={{ duration: 0.2 }}
             className="w-full max-w-lg wr-panel overflow-hidden text-[#e9dfc4] relative"
           >
-            {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-[#4d452c] bg-[#0d0b06]">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 border border-[#6f5d21] bg-[#14110a] flex items-center justify-center text-[#c9a227]">
@@ -57,9 +51,7 @@ export function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
               </button>
             </div>
 
-            {/* Content */}
             <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto text-sm text-[#e9dfc4]">
-              {/* Rules List */}
               <div className="space-y-3">
                 <h4 className="text-xs tracking-[0.3em] text-[#a8956c] uppercase">
                   Combat Directives
@@ -117,7 +109,6 @@ export function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
                 </ol>
               </div>
 
-              {/* Fleet Breakdown */}
               <div className="space-y-3">
                 <h4 className="text-xs tracking-[0.3em] text-[#a8956c] uppercase">
                   Registered Hulls
@@ -154,7 +145,6 @@ export function HowToPlayModal({ isOpen, onClose }: HowToPlayModalProps) {
               </div>
             </div>
 
-            {/* Footer */}
             <div className="px-6 py-3 border-t border-[#4d452c] bg-[#0d0b06] flex justify-end">
               <button
                 id="dismiss-how-to-play-btn"

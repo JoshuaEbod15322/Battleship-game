@@ -96,7 +96,6 @@ export const JoinGame: React.FC<JoinGameProps> = ({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Commander Name */}
         <div>
           <label className="block text-[11px] uppercase tracking-[0.2em] text-[#a8956c] mb-1.5 flex items-center gap-1.5">
             <User className="w-3.5 h-3.5 text-[#c9a227]" />
@@ -113,7 +112,6 @@ export const JoinGame: React.FC<JoinGameProps> = ({
           />
         </div>
 
-        {/* Room Code Input */}
         <div>
           <label className="block text-[11px] uppercase tracking-[0.2em] text-[#a8956c] mb-1.5 flex items-center gap-1.5">
             <Hash className="w-3.5 h-3.5 text-[#c9a227]" />
@@ -133,7 +131,6 @@ export const JoinGame: React.FC<JoinGameProps> = ({
           />
         </div>
 
-        {/* Error message */}
         {activeError && (
           <motion.div
             initial={{ opacity: 0, y: -4 }}

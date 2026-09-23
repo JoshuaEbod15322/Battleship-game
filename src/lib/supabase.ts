@@ -1,6 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-// Environment variables
 const ENV_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as
   | string
   | undefined;
@@ -118,7 +117,6 @@ export async function joinRoom(
     .maybeSingle();
 
   if (lookupError && lookupError.code !== "42501") throw lookupError;
-  // Realtime still verifies the live host when database persistence is unavailable.
   if (!room) return;
   if (room.player1_id === playerId) {
     throw new Error("This room is already open in your browser.");

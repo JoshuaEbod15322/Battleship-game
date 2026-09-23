@@ -1,18 +1,5 @@
 import type { ShipDefinition } from "../types/battleship";
 
-// ---------------------------------------------------------------------------
-// Import your ship images from src/assets/ship/
-// Naming convention:
-//   <shipId>-side.(svg|png|webp)     →  side view  (shown in Fleet Deployment panel)
-//   <shipId>-top.(svg|png|webp)      →  top view   (shown on the game board grid)
-//   <shipId>-destroy.(svg|png|webp)  →  destroyed  (shown when the ship is fully sunk)
-//
-// Example:
-//   import carrierSide from "../assets/ship/carrier-side.svg";
-//   import carrierTop  from "../assets/ship/carrier-top.svg";
-//   import carrierDestroy from "../assets/ship/carrier-destroy.png";
-// ---------------------------------------------------------------------------
-
 import carrierSide from "../assets/ship/carrier-side.png";
 import carrierTop from "../assets/ship/carrier-top.png";
 import carrierDestroy from "../assets/ship/carrier-destroy.png";
@@ -49,9 +36,9 @@ export const SHIPS: ShipDefinition[] = [
     name: "Battleship",
     size: 4,
     emoji: "🛳️",
-    imageSide: battleshipSide, // e.g. battleshipSide
-    imageTop: battleshipTop, // e.g. battleshipTop
-    imageDestroy: battleshipDestroy, // e.g. battleshipDestroy
+    imageSide: battleshipSide,
+    imageTop: battleshipTop,
+    imageDestroy: battleshipDestroy,
     description: "Armored juggernaut packed with heavy artillery.",
   },
   {
@@ -59,9 +46,9 @@ export const SHIPS: ShipDefinition[] = [
     name: "Cruiser",
     size: 3,
     emoji: "🚤",
-    imageSide: cruiserSide, // e.g. cruiserSide
-    imageTop: cruiserTop, // e.g. cruiserTop
-    imageDestroy: cruiserDestroy, // e.g. cruiserDestroy
+    imageSide: cruiserSide,
+    imageTop: cruiserTop,
+    imageDestroy: cruiserDestroy,
     description: "Fast tactical vessel for strike maneuvers.",
   },
   {
@@ -69,9 +56,9 @@ export const SHIPS: ShipDefinition[] = [
     name: "Submarine",
     size: 3,
     emoji: "🚢",
-    imageSide: submarineSide, // e.g. submarineSide
-    imageTop: submarineTop, // e.g. submarineTop
-    imageDestroy: submarineDestroy, // e.g. submarineDestroy
+    imageSide: submarineSide,
+    imageTop: submarineTop,
+    imageDestroy: submarineDestroy,
     description: "Stealth undersea hunter with sonar tracking.",
   },
   {
@@ -79,9 +66,9 @@ export const SHIPS: ShipDefinition[] = [
     name: "Destroyer",
     size: 2,
     emoji: "⛴️",
-    imageSide: destroyerSide, // e.g. destroyerSide
-    imageTop: destroyerTop, // e.g. destroyerTop
-    imageDestroy: destroyerDestroy, // e.g. destroyerDestroy
+    imageSide: destroyerSide,
+    imageTop: destroyerTop,
+    imageDestroy: destroyerDestroy,
     description: "Agile escort boat equipped for rapid anti-sub defense.",
   },
 ];

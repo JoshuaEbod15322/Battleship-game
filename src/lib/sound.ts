@@ -1,14 +1,8 @@
-/**
- * Naval Battleship Procedural Sound Engine
- * Uses Web Audio API for zero-dependency, low-latency audio effects.
- */
-
 class SoundEngine {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
 
   constructor() {
-    // Check saved mute preference
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('battleship_sound_muted');
       this.isMuted = saved === 'true';
@@ -43,7 +37,6 @@ class SoundEngine {
     return this.isMuted;
   }
 
-  // 1. UI Button Click
   public playButton() {
     if (this.isMuted) return;
     try {
@@ -61,11 +54,9 @@ class SoundEngine {
       osc.start();
       osc.stop(this.ctx.currentTime + 0.05);
     } catch {
-      // Audio context restricted until user interaction
     }
   }
 
-  // 2. Hit Explosion
   public playHit() {
     if (this.isMuted) return;
     try {
@@ -73,7 +64,6 @@ class SoundEngine {
       if (!this.ctx) return;
 
       const now = this.ctx.currentTime;
-      // White noise burst for explosion
       const bufferSize = this.ctx.sampleRate * 0.35;
       const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -83,7 +73,6 @@ class SoundEngine {
       const noise = this.ctx.createBufferSource();
       noise.buffer = buffer;
 
-      // Lowpass filter for deep boom
       const filter = this.ctx.createBiquadFilter();
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(800, now);
@@ -97,7 +86,6 @@ class SoundEngine {
       filter.connect(gain);
       gain.connect(this.ctx.destination);
 
-      // Low frequency sub-thump
       const sub = this.ctx.createOscillator();
       const subGain = this.ctx.createGain();
       sub.type = 'triangle';
@@ -116,7 +104,6 @@ class SoundEngine {
     } catch {}
   }
 
-  // 3. Water Splash Miss
   public playMiss() {
     if (this.isMuted) return;
     try {
@@ -124,7 +111,6 @@ class SoundEngine {
       if (!this.ctx) return;
 
       const now = this.ctx.currentTime;
-      // Water droplet / bubbling splash
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
       osc.type = 'sine';
@@ -133,15 +119,14 @@ class SoundEngine {
       gain.gain.setValueAtTime(0.18, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
 
-      // Noise component for splash
-      const bufferSize = this.ctx.sampleRate * 0.2;
-      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      const splashBufferSize = this.ctx.sampleRate * 0.2;
+      const splashBuffer = this.ctx.createBuffer(1, splashBufferSize, this.ctx.sampleRate);
+      const splashData = splashBuffer.getChannelData(0);
+      for (let i = 0; i < splashBufferSize; i++) {
+        splashData[i] = (Math.random() * 2 - 1) * (1 - i / splashBufferSize);
       }
       const splash = this.ctx.createBufferSource();
-      splash.buffer = buffer;
+      splash.buffer = splashBuffer;
       const splashFilter = this.ctx.createBiquadFilter();
       splashFilter.type = 'bandpass';
       splashFilter.frequency.setValueAtTime(1200, now);
@@ -164,7 +149,6 @@ class SoundEngine {
     } catch {}
   }
 
-  // 4. Ship Sunk Alarm & Devastating Impact
   public playSunk() {
     if (this.isMuted) return;
     try {
@@ -172,10 +156,8 @@ class SoundEngine {
       if (!this.ctx) return;
 
       const now = this.ctx.currentTime;
-      // Play heavy hit first
       this.playHit();
 
-      // Naval warning siren pulse
       for (let i = 0; i < 3; i++) {
         const siren = this.ctx.createOscillator();
         const sirenGain = this.ctx.createGain();
@@ -196,7 +178,6 @@ class SoundEngine {
     } catch {}
   }
 
-  // 5. Sonar Radar Ping (Turn Change)
   public playTurn() {
     if (this.isMuted) return;
     try {
@@ -208,7 +189,7 @@ class SoundEngine {
       const gain = this.ctx.createGain();
 
       ping.type = 'sine';
-      ping.frequency.setValueAtTime(1046.5, now); // C6 submarine ping
+      ping.frequency.setValueAtTime(1046.5, now);
       ping.frequency.exponentialRampToValueAtTime(1000, now + 0.4);
 
       gain.gain.setValueAtTime(0.15, now);
@@ -222,7 +203,6 @@ class SoundEngine {
     } catch {}
   }
 
-  // 6. Victory Fanfare
   public playVictory() {
     if (this.isMuted) return;
     try {
@@ -230,7 +210,7 @@ class SoundEngine {
       if (!this.ctx) return;
 
       const now = this.ctx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+      const notes = [523.25, 659.25, 783.99, 1046.5];
       notes.forEach((freq, idx) => {
         const osc = this.ctx!.createOscillator();
         const gain = this.ctx!.createGain();
@@ -252,7 +232,6 @@ class SoundEngine {
     } catch {}
   }
 
-  // 7. Defeat Drone
   public playDefeat() {
     if (this.isMuted) return;
     try {
@@ -260,7 +239,7 @@ class SoundEngine {
       if (!this.ctx) return;
 
       const now = this.ctx.currentTime;
-      const notes = [440, 392, 349.23, 293.66]; // A4, G4, F4, D4
+      const notes = [440, 392, 349.23, 293.66];
       notes.forEach((freq, idx) => {
         const osc = this.ctx!.createOscillator();
         const gain = this.ctx!.createGain();

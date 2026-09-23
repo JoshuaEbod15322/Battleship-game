@@ -1,5 +1,4 @@
--- Policies required by the browser multiplayer client.
--- Run this once in Supabase SQL Editor.
+-- Run once in the Supabase SQL editor (browser client needs anon access to public.rooms).
 
 grant usage on schema public to anon, authenticated;
 grant select, insert, update on table public.rooms to anon, authenticated;

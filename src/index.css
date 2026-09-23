@@ -1,26 +1,21 @@
 @import "tailwindcss";
 
-/* ==========================================================================
-   WAR ROOM 1944 — shared theme system
-   WWII operations-room language: oiled steel frames, parchment orders,
-   brass fittings, signal-red stamps, typewriter dispatches.
-   Every screen composes these tokens so the whole game reads as one room.
-   ========================================================================== */
+/* War-room 1944 theme tokens + shared panel/button/field styles. */
 
 @layer base {
   :root {
-    --wr-ink: #12100a; /* page depth, near-black olive */
-    --wr-panel: #211c11; /* steel-framed panel */
-    --wr-panel-deep: #171309; /* inset wells */
-    --wr-paper: #d9c9a3; /* parchment */
-    --wr-paper-hi: #efe3c2; /* parchment highlight */
-    --wr-paper-dim: #a8956c; /* muted parchment text */
-    --wr-brass: #c9a227; /* brass fittings */
-    --wr-brass-hi: #e8c84a; /* polished brass */
-    --wr-brass-dim: #6f5d21; /* dark brass borders */
-    --wr-olive: #6b6238; /* olive drab */
-    --wr-signal: #b3352b; /* signal red */
-    --wr-ink-text: #241d0e; /* ink on parchment */
+    --wr-ink: #12100a;
+    --wr-panel: #211c11;
+    --wr-panel-deep: #171309;
+    --wr-paper: #d9c9a3;
+    --wr-paper-hi: #efe3c2;
+    --wr-paper-dim: #a8956c;
+    --wr-brass: #c9a227;
+    --wr-brass-hi: #e8c84a;
+    --wr-brass-dim: #6f5d21;
+    --wr-olive: #6b6238;
+    --wr-signal: #b3352b;
+    --wr-ink-text: #241d0e;
   }
 
   body {
@@ -95,7 +90,6 @@
   animation: spin-slow 8s linear infinite;
 }
 
-/* Framed steel panel: double-ruled brass frame on oiled dark steel. */
 .wr-panel {
   background:
     linear-gradient(180deg, rgba(201, 162, 39, 0.06), transparent 22%),
@@ -108,7 +102,6 @@
     0 18px 50px rgba(0, 0, 0, 0.55);
 }
 
-/* Parchment order plate: typed dispatch strip for headers and labels. */
 .wr-plate {
   background: linear-gradient(180deg, var(--wr-paper-hi), var(--wr-paper));
   color: var(--wr-ink-text);
@@ -118,7 +111,6 @@
     0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
-/* Brass order button: the one action that matters on a panel. */
 .wr-btn-brass {
   background: linear-gradient(180deg, var(--wr-brass-hi), var(--wr-brass) 55%, #9a7a1c);
   color: #1d1607;
@@ -145,7 +137,6 @@
   box-shadow: none;
 }
 
-/* Steel ghost button: secondary war-room controls. */
 .wr-btn-steel {
   background: linear-gradient(180deg, #2c2a20, #1c1912);
   color: var(--wr-paper);
@@ -167,7 +158,6 @@
   cursor: not-allowed;
 }
 
-/* Inset typewriter field. */
 .wr-input {
   background: #0d0b06;
   border: 1px solid #4d452c;
@@ -188,7 +178,6 @@
     0 0 0 1px rgba(201, 162, 39, 0.4);
 }
 
-/* Rubber-stamp tag: rotated, double-bordered, signal red or brass. */
 .wr-stamp {
   display: inline-block;
   border: 2px solid currentColor;
@@ -202,7 +191,6 @@
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3CfeComposite operator='in' in2='SourceGraphic'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
 }
 
-/* Brass rule with center diamond, for dossier dividers. */
 .wr-rule {
   display: flex;
   align-items: center;
@@ -229,7 +217,6 @@
   flex-shrink: 0;
 }
 
-/* Map-table felt for board panels. */
 .wr-map {
   background:
     radial-gradient(
@@ -250,7 +237,6 @@
     linear-gradient(180deg, #20241a, #161a12);
 }
 
-/* War-room scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

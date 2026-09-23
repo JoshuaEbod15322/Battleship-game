@@ -15,11 +15,9 @@ export default function App() {
   const [roomCode, setRoomCode] = useState<string>("");
   const [invitedCode, setInvitedCode] = useState<string | null>(null);
 
-  // Modals
   const [howToPlayOpen, setHowToPlayOpen] = useState(false);
   const [supabaseConfigOpen, setSupabaseConfigOpen] = useState(false);
 
-  // Player state
   const [playerName, setPlayerName] = useState<string>(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("battleship_player_name");
@@ -48,7 +46,7 @@ export default function App() {
   const activeRoomRef = useRef<Room | null>(null);
   activeRoomRef.current = activeRoom;
 
-  // Keep the host reachable while the create screen is open. Gameplay mounts later.
+  // Host must stay subscribed on the create screen so GUEST_JOINED is not missed.
   useEffect(() => {
     if (phase !== "create" || !localPlayer || !roomCode) return;
 
@@ -124,7 +122,6 @@ export default function App() {
     };
   }, [phase, localPlayer, roomCode]);
 
-  // Save player name when changed
   const handlePlayerNameChange = (name: string) => {
     setPlayerName(name);
     if (typeof window !== "undefined") {
@@ -132,15 +129,12 @@ export default function App() {
     }
   };
 
-  // Check URL for invite code on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Check query param e.g. ?join=A7K9P2
     const params = new URLSearchParams(window.location.search);
     const joinParam = params.get("join");
 
-    // Check pathname e.g. /join/A7K9P2
     const pathMatch = window.location.pathname.match(/\/join\/([A-Za-z0-9]+)/);
     const pathCode = pathMatch ? pathMatch[1] : null;
 
@@ -152,7 +146,6 @@ export default function App() {
     }
   }, []);
 
-  // Action: Create Game
   const handleStartCreateGame = async () => {
     const newCode = generateRoomCode();
     setCreateError(null);
@@ -197,12 +190,10 @@ export default function App() {
     setPhase("create");
   };
 
-  // Action: Join Game screen
   const handleOpenJoinGame = () => {
     setPhase("join");
   };
 
-  // Action: Execute Join Room
   const handleExecuteJoin = async (codeToJoin: string) => {
     setIsJoining(true);
     setJoinError(null);
@@ -237,13 +228,10 @@ export default function App() {
       createdAt: Date.now(),
     };
     setActiveRoom(room);
-
-    // Enter directly into active game / lobby
     setPhase("game");
     setIsJoining(false);
   };
 
-  // When Host sees Challenger connect, can move to Lobby or directly into placement
   const handleHostTransitionToGame = () => {
     setPhase("game");
   };
@@ -262,7 +250,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#12100a] text-[#e9dfc4] flex flex-col">
-      {/* 1. HOME PHASE */}
       {phase === "home" && (
         <Home
           onCreateGame={handleStartCreateGame}
@@ -273,7 +260,6 @@ export default function App() {
         />
       )}
 
-      {/* 2. CREATE GAME PHASE */}
       {phase === "create" && (
         <div className="min-h-screen flex items-center justify-center p-4">
           <CreateGame
@@ -287,7 +273,6 @@ export default function App() {
         </div>
       )}
 
-      {/* 3. JOIN GAME PHASE */}
       {phase === "join" && (
         <div className="min-h-screen flex items-center justify-center p-4">
           <JoinGame
@@ -302,7 +287,6 @@ export default function App() {
         </div>
       )}
 
-      {/* 4. LOBBY PHASE (Optional transitional view) */}
       {phase === "lobby" && activeRoom && localPlayer && (
         <div className="min-h-screen flex items-center justify-center p-4">
           <RoomLobby
@@ -314,7 +298,6 @@ export default function App() {
         </div>
       )}
 
-      {/* 5. ACTIVE GAME (Placement, Battle, Finished) */}
       {phase === "game" && localPlayer && (
         <Game
           roomCode={roomCode}
@@ -332,7 +315,6 @@ export default function App() {
         />
       )}
 
-      {/* GLOBAL MODALS */}
       <HowToPlayModal
         isOpen={howToPlayOpen}
         onClose={() => setHowToPlayOpen(false)}

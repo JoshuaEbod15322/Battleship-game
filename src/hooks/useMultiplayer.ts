@@ -38,18 +38,15 @@ export function useMultiplayer(
   const [opponentLeft, setOpponentLeft] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Private local fleet (Never sent across the wire until sunk!)
+  // Local fleet stays private; only sunk ships are revealed.
   const [myFleet, setMyFleet] = useState<PlacedShip[]>([]);
   const [myFleetReady, setMyFleetReady] = useState<boolean>(false);
   const [opponentFleetReady, setOpponentFleetReady] = useState<boolean>(false);
 
-  // Attacks tracked:
-  // myAttacksOnEnemy: coordinates where local player attacked the opponent
   const [myAttacksOnEnemy, setMyAttacksOnEnemy] = useState<AttackRecord[]>([]);
-  // enemyAttacksOnMe: coordinates where opponent attacked local player
   const [enemyAttacksOnMe, setEnemyAttacksOnMe] = useState<AttackRecord[]>([]);
 
-  // Sunk enemy ships (publicly revealed once fully destroyed)
+  // Sunk enemy ships revealed on destruction
   const [sunkEnemyShips, setSunkEnemyShips] = useState<
     Array<{
       id: ShipType;
@@ -63,7 +60,6 @@ export function useMultiplayer(
     }>
   >([]);
 
-  // Latest attack feedback banner / flash
   const [lastAttackFeedback, setLastAttackFeedback] =
     useState<AttackFeedback | null>(null);
 
@@ -89,9 +85,7 @@ export function useMultiplayer(
   const localPlayerRef = useRef<Player | null>(localPlayer);
   localPlayerRef.current = localPlayer;
 
-  // Broadcast helper
   const sendEvent = useCallback((event: string, payload: unknown) => {
-    // 1. Supabase Realtime Channel
     if (channelRef.current) {
       channelRef.current
         .send({
@@ -104,7 +98,6 @@ export function useMultiplayer(
         });
     }
 
-    // 2. Local tab relay BroadcastChannel (for testing in 2 tabs simultaneously or fallback)
     if (broadcastChannelRef.current) {
       try {
         broadcastChannelRef.current.postMessage({ event, payload });
@@ -114,7 +107,6 @@ export function useMultiplayer(
     }
   }, []);
 
-  // Initialize and subscribe to channel
   useEffect(() => {
     if (!roomCode || !localPlayer) return;
 
@@ -122,11 +114,9 @@ export function useMultiplayer(
     const supabase = getSupabaseClient();
     const isHost = localPlayer.role === "player1";
 
-    // Reset local match state
     setOpponentLeft(false);
     setError(null);
 
-    // Initial room state
     const initialRoom: Room = {
       roomId: `room_${normalizedCode}`,
       roomCode: normalizedCode,
@@ -139,7 +129,6 @@ export function useMultiplayer(
     };
     setRoom(initialRoom);
 
-    // Setup local BroadcastChannel for multi-tab fallback
     try {
       const bc = new BroadcastChannel(`battleship_relay_${normalizedCode}`);
       broadcastChannelRef.current = bc;
@@ -149,10 +138,8 @@ export function useMultiplayer(
         }
       };
     } catch {
-      // BroadcastChannel not supported in some sandboxes
     }
 
-    // Connect to Supabase Realtime if configured
     if (supabase) {
       setConnectionStatus("reconnecting");
       const channel = supabase.channel(`battleship-room:${normalizedCode}`, {
@@ -164,7 +151,6 @@ export function useMultiplayer(
 
       channelRef.current = channel;
 
-      // Handle presence (who is online)
       channel
         .on("presence", { event: "sync" }, () => {
           const state = channel.presenceState();
@@ -217,7 +203,6 @@ export function useMultiplayer(
             }, 2500);
           }
         })
-        // Broadcast events
         .on("broadcast", { event: "*" }, ({ event, payload }) => {
           handleIncomingMessage(event, payload);
         })
@@ -231,7 +216,7 @@ export function useMultiplayer(
               onlineAt: new Date().toISOString(),
             });
 
-            // If Guest just subscribed, ask host for sync
+            // Guest asks host for state after subscribing.
             if (!isHost) {
               channel.send({
                 type: "broadcast",
@@ -246,24 +231,21 @@ export function useMultiplayer(
           }
         });
     } else {
-      // Offline / Local relay mode
       setConnectionStatus("connected");
       if (!isHost) {
-        // Send GUEST_JOINED over broadcast channel
         setTimeout(() => {
           sendEvent("GUEST_JOINED", { player: localPlayer });
         }, 150);
       }
     }
 
-    // Message dispatcher
+    // Events: GUEST_JOINED, ROOM_SYNC, PLAYER_READY, GAME_STARTED, ATTACK, ATTACK_RESULT, REMATCH_REQUEST, OPPONENT_LEFT
     function handleIncomingMessage(event: string, payload: any) {
       const currentLocal = localPlayerRef.current;
       if (!currentLocal) return;
 
       switch (event) {
         case "GUEST_JOINED": {
-          // Received by host (player1)
           if (currentLocal.role === "player1") {
             const guestPlayer: Player = payload.player;
             setOpponentConnected(true);
@@ -275,9 +257,8 @@ export function useMultiplayer(
               const updated: Room = {
                 ...prev,
                 player2: guestPlayer,
-                status: "placement", // Both connected! Transition to placement
+                status: "placement",
               };
-              // Sync updated state to guest
               setTimeout(() => {
                 sendEvent("ROOM_SYNC", { room: updated });
               }, 50);
@@ -290,7 +271,6 @@ export function useMultiplayer(
         }
 
         case "ROOM_SYNC": {
-          // Received by guest (player2) or sync requests
           const incomingRoom: Room = payload.room;
           if (!incomingRoom || incomingRoom.roomCode !== normalizedCode) break;
           setRoom(incomingRoom);
@@ -315,7 +295,6 @@ export function useMultiplayer(
             sound.playButton();
           }
 
-          // Check if both are ready now
           const currentMyReady =
             role === currentLocal.role ? true : myFleetReadyRef.current;
           const currentOpReady =
@@ -327,13 +306,12 @@ export function useMultiplayer(
             setMyFleetReady(true);
             setOpponentFleetReady(true);
             sendEvent("GAME_STARTED", { startingTurn: "player1" });
-            // Both ready! Transition to battle
             setRoom((prev) => {
               if (!prev) return null;
               return {
                 ...prev,
                 status: "battle",
-                currentTurn: "player1", // Player 1 fires first
+                currentTurn: "player1",
               };
             });
             sound.playTurn();
@@ -360,15 +338,14 @@ export function useMultiplayer(
         }
 
         case "ATTACK": {
-          // Opponent attacked local player's waters!
           const { row, col, attackerRole, attackerId } = payload;
-          if (attackerRole === currentLocal.role) return; // ignore own echo
+          if (attackerRole === currentLocal.role) return;
           const attackAlreadyProcessed = enemyAttacksRef.current.some(
             (attack) => attack.row === row && attack.col === col,
           );
           if (attackAlreadyProcessed) break;
 
-          // Defender validates against private fleet
+          // Defender validates against its private fleet.
           const currentFleet = myFleetRef.current;
           let hit = false;
           let hitShip: PlacedShip | null = null;
@@ -420,11 +397,9 @@ export function useMultiplayer(
             }
           }
 
-          // Check if all of defender's ships are destroyed
           const allSunk =
             updatedMyFleet.length >= 5 && updatedMyFleet.every((s) => s.isSunk);
 
-          // Update defender's incoming attack history
           const attackRecord: AttackRecord = {
             row,
             col,
@@ -436,7 +411,6 @@ export function useMultiplayer(
           enemyAttacksRef.current = [...enemyAttacksRef.current, attackRecord];
           setEnemyAttacksOnMe(enemyAttacksRef.current);
 
-          // Sound effect on defender
           if (allSunk) {
             sound.playDefeat();
           } else if (sunkShipData) {
@@ -456,11 +430,9 @@ export function useMultiplayer(
             timestamp: Date.now(),
           });
 
-          // Next turn
           const nextTurn: PlayerRole =
             attackerRole === "player1" ? "player2" : "player1";
 
-          // Broadcast validated result back to attacker and room
           sendEvent("ATTACK_RESULT", {
             row,
             col,
@@ -473,7 +445,6 @@ export function useMultiplayer(
             winner: allSunk ? attackerRole : null,
           });
 
-          // Update defender's room state
           setRoom((prev) => {
             if (!prev) return null;
             return {
@@ -491,7 +462,6 @@ export function useMultiplayer(
         }
 
         case "ATTACK_RESULT": {
-          // Attacker (and observers) receive the attack result!
           const {
             row,
             col,
@@ -505,7 +475,6 @@ export function useMultiplayer(
           } = payload;
 
           if (attackerRole === currentLocal.role) {
-            // Local player was the attacker!
             const resultAlreadyProcessed = myAttacksRef.current.some(
               (attack) => attack.row === row && attack.col === col,
             );
@@ -529,7 +498,6 @@ export function useMultiplayer(
               );
             }
 
-            // Sounds for attacker
             if (allSunk) {
               sound.playVictory();
             } else if (sunkShip) {
@@ -550,7 +518,6 @@ export function useMultiplayer(
             });
           }
 
-          // Update room turn and winner
           setRoom((prev) => {
             if (!prev) return null;
             return {
@@ -568,7 +535,6 @@ export function useMultiplayer(
         }
 
         case "REMATCH_REQUEST": {
-          // Reset game for both players to placement phase
           myAttacksRef.current = [];
           enemyAttacksRef.current = [];
           myFleetReadyRef.current = false;
@@ -618,7 +584,6 @@ export function useMultiplayer(
     };
   }, [roomCode, localPlayer, sendEvent, onPhaseChange]);
 
-  // Action: Local Player locks in fleet placement
   const setReady = useCallback(() => {
     if (!localPlayer || myFleet.length < 5) return;
     myFleetReadyRef.current = true;
@@ -628,7 +593,6 @@ export function useMultiplayer(
       role: localPlayer.role,
     });
 
-    // Check if opponent is already ready
     if (opponentFleetReadyRef.current) {
       opponentFleetReadyRef.current = true;
       setRoom((prev) => {
@@ -644,20 +608,17 @@ export function useMultiplayer(
     }
   }, [localPlayer, myFleet, opponentFleetReady, sendEvent, onPhaseChange]);
 
-  // Action: Launch Attack
   const launchAttack = useCallback(
     (row: number, col: number): boolean => {
       if (!room || !localPlayer) return false;
       if (room.status !== "battle") return false;
       if (room.currentTurn !== localPlayer.role) return false;
 
-      // Validate cell hasn't been attacked yet
       const alreadyAttacked = myAttacksOnEnemy.some(
         (a) => a.row === row && a.col === col,
       );
       if (alreadyAttacked) return false;
 
-      // Send attack to defending player
       sound.playButton();
       sendEvent("ATTACK", {
         row,
@@ -671,7 +632,6 @@ export function useMultiplayer(
     [room, localPlayer, myAttacksOnEnemy, sendEvent],
   );
 
-  // Action: Rematch
   const requestRematch = useCallback(() => {
     sendEvent("REMATCH_REQUEST", { senderId: localPlayer?.id });
     myAttacksRef.current = [];
@@ -698,7 +658,6 @@ export function useMultiplayer(
     if (onPhaseChange) onPhaseChange("placement");
   }, [localPlayer, sendEvent, onPhaseChange]);
 
-  // Action: Leave Room
   const leaveRoom = useCallback(() => {
     sendEvent("OPPONENT_LEFT", { playerId: localPlayer?.id });
     if (channelRef.current && getSupabaseClient()) {
