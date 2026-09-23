@@ -1,4 +1,4 @@
-# Battleship — War Room 1944
+# Battleship Game
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)
@@ -11,6 +11,10 @@
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 Realtime 2-player Battleship with a WWII operations-room theme. Host creates an operation, shares a 6-character cipher or invite link, both deploy 5 hulls, then trade shots until one fleet is on the bottom.
+
+## Gameplay
+
+![Battleship Gameplay](./public/gameplay.png)
 
 ## Features
 
@@ -42,10 +46,10 @@ npm run lint
 
 ## Environment
 
-| Variable | Purpose |
-| --- | --- |
-| `VITE_SUPABASE_URL` | Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anon key |
+| Variable                 | Purpose              |
+| ------------------------ | -------------------- |
+| `VITE_SUPABASE_URL`      | Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase anon key    |
 
 Without these the game still works across tabs on the same machine via `BroadcastChannel`. For cross-device play, run `supabase-policies.sql` once in the Supabase SQL editor, then set the variables (Vercel or `.env`).
 
